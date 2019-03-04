@@ -1,1 +1,14 @@
 *.pdf
+*.aux
+*.bbl
+*.blg
+*.glo
+*.glsdefs
+*.ist
+*.log
+*.lof
+*.lot
+*.toc
+*.gz
+*.gls
+

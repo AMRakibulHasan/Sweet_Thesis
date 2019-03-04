@@ -1,14 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% THESIS DESCRIPTION:
-%   A concise description of the main concepts of the thesis.
-%
-% RESEARCH:
-%   A list of research activities which led to this thesis.
-%
-% EXPERIMENTS:
-%   A list of the experiments performed which supported the research.
-%
+%TODO:
+%* Fix Acknowledgments formatting
+%* Clean up Abstract for flow
+%* 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,american]{report}
 \usepackage{.//sty//rit-coe-thesis}
@@ -17,7 +11,6 @@
 % is contained in the thesis.  There is no harm in leaving them in.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{subfigure}
-\usepackage[refpages]{gloss}
 \usepackage{babel}
 \usepackage{times}
 \usepackage{graphicx}
@@ -26,7 +19,8 @@
 \usepackage{verbatim}
 \usepackage{enumerate}
 \usepackage{afterpage}
-%\usepackage{authordate1-4}
+\usepackage{glossaries}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   Mark the document as 'draft' with a date. Be sure to comment this out for
 % the final version.
@@ -38,16 +32,17 @@
   \DeclareGraphicsExtensions{.pdf,.pgf,.png}
   \graphicspath{{.//figs//}}
 
-%% Generate glossary
-   \makegloss
+\makeglossaries
+
+\newglossaryentry{rit}{name={RIT},description={Rochester Institute of Technology}}
 
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title page
 % The \title{} can contain line breaks as appropriate...
-\title{\vspace{-0.20in}Exploration of the Limits of Deep Learning for Cyber Event  Scenarios in the Generative Setting}
+\title{\vspace{-0.20in}Applying Generative Adversarial Networks to Cyber-Alert Data}
 % The \titleline{} must have no line breaks in it.
-\titleline{Exploration of the Limits of Deep Learning for Cyber Event  Scenarios in the Generative Setting}
+\titleline{Applying Generative Adversarial Networks to Cyber-Alert Data}
 % There should be no reason to change the \thesistype{} or the \MSThesistrue...
 \thesistype{Thesis}
 \MSthesistrue
@@ -109,7 +104,7 @@
 \prefacesection{Dedication}
 \vfill
 \begin{center}
-To whoever...
+To my mother and father, Debbie and Jack Sweet, who taught me the value of a strong work ethic. And to my brother who always set an extremely high bar for me to try and beat.  Without your continued support and guidance I would never have been able to achieve all that I have. 
 \end{center}
 \vfill
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,7 +116,7 @@ To whoever...
 \prefacesection{Acknowledgments}
 \vfill
 \begin{center}
-\indent I am grateful for ...
+\indent Most importantly, thank you to Dr. S. Jay Yang for providing me with the opportunity to assist in research throughout my undergraduate study. Your continued feedback and encouragement to challenge myself over the years has helped me to grow into a strong engineer and critical thinker. You have had a profound impact on me, and I can never thank you enough for that. Next, I would like to thank Dr. Raymond Ptucha, Dr. Sonia Lopez-Alarcon, and the rest of the RIT Computer Engineering faculty for their willingness to educate the next generation of Computer Engineers. Finally, I would like to thank the soon to be Dr. Stephen Moskall who provided me my first opportunity to work with him and Dr. Yang when I was in my second year of undergrad. I cannot thank you enough for the professional and personal advice, as well as the good times in lab, that you have provided over the last four years.  
 \end{center}
 \vfill
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -137,8 +132,16 @@ To whoever...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Abstract
 \begin{abstractpage}
-This should be a short description of the work and the results.  Just the
-facts...
+	%1. High Level Problem Statement (Enterprise Networks and Challenges of Data)
+	%2. Machine Learning (GAN and C-Sec Challenges)
+	%3. This work...
+	
+Enterprise computer networks continue to grow in complexity and importance as reliance on network operation for day to day activities grows. Additionally, the number and severity of attacks perpetrated against these networks also continually grows. These attacks can disrupt business operation, influence markets, and even impact governmental actions. Methods for capturing malignant network behavior are often employed through network intrusion detection systems to allow for real time traffic analysis and anomaly detection. However, cyber-alert data lacks homogeneity, is inherently imbalanced, and is difficult to isolate and apply labels to. This poses a challenge to predictive models used for proactive Cyber Security. 
+
+Generative Adversarial Networks (GAN) encompass a type of neural network architecture which learns to recreate data based off an existing dataset. GANs have now been applied to a variety of field, such as Computer Vision, Natural Language Processing, and Cyber Security for adversarial sample crafting. In Computer Vision and Natural Language Processing there are large publicly available datasets to use for training and testing machine learning models; in the field of Cyber Security few analogs exist. By turning towards data generative algorithms, smaller datasets with wide variability may be artificially expanded and used in further study/simulation. Additionally, feature dependencies may be revealed and analyzed allowing for direct application to improved network defense.
+
+This work applies state of the art Generative Adversarial Networks to known malicious cyber alert data with the intent of achieving high fidelity data generation. Unique preprocessing steps, model considerations, and training methods are reviewed. Additionally, several methods for data fidelity evaluation are proposed; Including intersection of histograms for varying combinations of features, Jensen Shannon Divergence, and conditional and joint entropy calculations. Thorough examination of these metrics is shown to not only identify key aspects of the performance of GANs applied to Cyber Alert data, but also key relationships in the network traffic behavior. 
+
 \end{abstractpage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -154,21 +157,70 @@ facts...
 \afterpreface%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Formatting the Glossary
-    \setglosslabel{\bfseries#1\ifglossshort{ (#3)}{}} % Change heading to bold
-    \renewcommand{\glossheading}[1]{} % print glossary without heading
-% Comment the following if you do not want a glossary
-  \gloss[nocite]{*}     % Include glossary here
-  \printgloss{Glossary}
+\printglossaries
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is where the main body of the thesis starts
 \body%
 \chapter{Introduction}
 
-A glossary is useful to define acronyms such as ~\gloss{RIT}.
-\chapter*{Conclusions}
+\section{Challenges of Cyber Alert Data}
+
+\subsection{Availability of Data}
+
+\subsection{Data Imbalance, Irregularity, and Labeling}
+
+\section{Network Intrusion Detection Systems}
+
+\section{Generative Adversarial Networks}
+
+\section{Problem Statement}
+
+\chapter{Related Work}
+
+% Include a section on simulation and modeling?
+
+\section{Cyber Security and Machine Learning}
+
+\section{Existing Generative Model Applications}
+
+\section{Applications of Generative Models to Network Traffic}
+
+\section{Summary}
+
+\chapter{Methodology}
+
+\section{Cyber Alert Data Preprocessing}
+
+\section{Methods of Analyzing Alert Data}
+
+\subsection{Analyzing Fidelity of Data}
+
+\subsection{Analyzing Relationships within Alert Data}
+
+\chapter{Design Implementation}
+
+\section{Model Architecture}
+
+\subsection{Improving Model output through Mutual Information Contraints}
+
+\section{Model Training}
+
+\chapter{Results and Analysis}
+
+\section{Judging the Fidelity of Generated Data}
+
+\section{Visualizing Feature Relationships within Alerts}
+
+\chapter{Conclusions and Future Work}
+
+\section{Conclusion}
+
+\section{Future Work}
+
+\subsection{Multi-Alert Generation and Analysis}
+
+\subsection{Improving Generations through Reinforcement Learning}
 
   ...
   \nocite{*}
@@ -188,7 +240,7 @@ A glossary is useful to define acronyms such as ~\gloss{RIT}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The appendices are (of course) optional.
 \appendix
-\chapter{A Long Proof}
+\chapter{Proof of Smooth Gradients from Hierarchical Scoring}
   ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
