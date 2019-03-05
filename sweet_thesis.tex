@@ -1,8 +1,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %TODO:
-%* Fix Acknowledgments formatting
-%* Clean up Abstract for flow
-%* 
+% * Fix Acknowledgments formatting
+% * Clean up Abstract for flow
+% * Simulation and Modeling Subsection?
+% * TM marker on Suricata?
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
+% *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,american]{report}
 \usepackage{.//sty//rit-coe-thesis}
@@ -164,29 +184,63 @@ This work applies state of the art Generative Adversarial Networks to known mali
 \body%
 \chapter{Introduction}
 
-\section{Challenges of Cyber Alert Data}
-
-\subsection{Availability of Data}
-
-\subsection{Data Imbalance, Irregularity, and Labeling}
-
 \section{Network Intrusion Detection Systems}
+A variety of packet capture tools exist to enable individuals and corporations alike to monitor traffic on their networks. Several tools take this logging a step further and allow for real time network intrusion detection. Network intrusion detection systems (NIDS) are a rule based system which allows for automated flagging of potentially malignant packet traffic through the aggregation of temporally contiguous packets;  These "alerts" typically consist of the believed attack signature, a category that the attack falls under, target machine, timestamp, and more.   For example, the Suricata NIDS is capable of processing up to $30,000$ packets per second. This kind of high volume traffic may occur when an attack initiates a comprehensive network scan and may only result in a few alerts stating that there is scanning activity occuring. These systems are employed to flag potentially malicious traffic, note long term patterns in traffic, and provide system administration with a trail of alerts to analyze after a cyber-attack has taken place. 
+
+Though these tools provide network operators with a wealth of data to analyze they suffer from a fundamental issue. The data only exists after a cyber attack has already taken place, and therefore only allows for reactionary defense techniques. This has lead researchers to see if they can use this data, as well as simulations and extrapolation, to further understand network vulnerabilities in the pursuit of proactive cyber security. 
+
+\section{Challenges of Cyber Alert Data}
+Cyber Alert data suffers from two primary challenges; There is a lack of publicly available data and the data that does exist is imbalanced, non-homogeneous, and unlabeled. 
+
+The lack of publically available datasets has pushed researchers to develop probablistic models for attack path prediction. This is type of model is known as an attack graph and has taken on many implementations as seen in \cite{Qin2004, Wang2006, Noel2009}. All of the reviewed implementations attempt to map all possible attacks for a network given it's architecture in an automated way. These models can provide which attack path is most likely to be used by attackers, how many attack paths exist within the network, and what are key vulnerabilities in a network when mapped to a Markov Chain, as shown by Li \cite{Li2017}. Other works have attempted to identify patterns and obfuscation techniques through the use of Variable Length Markov Models \cite{Fava2008} and statistical graph models \cite{Du2014}
+
+
+Of the datasets which do exist, common issues include small data set size, high imbalance between malignant and benign alerts, redundant samples, and intricate interactions leading to misleading labels. One example of this is the KDD Cup '99 \cite{kdd-cup} dataset. This dataset was prepared by Stolfo \etal \cite{Stolfo} based off data captured in DARPA'98 IDS evaluation program \cite{Lippmann}. It consists of samples from 7 weeks of network traffic collected via TCPdump that was labeled with one of 5 labels {normal, denial of service, user to root attack, remote to local attack, or probing attack}. Recently, it been used for multiple studies involving cyber attack classification and prediction through the use of recurrent neural networks (RNNs) \cite{Kim, Staudemeyer}. However this dataset contains several pathological issues such as synthetic background and attack data based off real world samples, underlying issues with TCPdump under intense load, and a lack of precise definitions for what constitutes an attack, as highlighted by Tavallaee \etal \cite{Tavallaee} and McHugh \cite{McHugh}.
+
+Other publicly available datasets struggle with a low signal to noise ratio. Two examples of this are the Multi Source Cyber Event Dataset published by Los Alamos National Laboratory \cite{akent-2015-enterprise-data} and the DeepSecurity Dataset released by Faber and Malloy \cite{Faber2018}. For example, the Multi Source Cyber Event Dataset contains 4.8 KB of information in textual format pertaining to malicious events. The magnitude of these events pales in comparison to the overall scale of the dataset, which is encompassed in  12.2 GB of textual data. DeepSecurity faces a similar issue with a low percentage of their 600,000 network events being representative of malicious network traffic. The authors note that the availability of quality labeled data and a low signal to noise ratio for malicious activity are both outstanding issues with the data. 
+
+Though the distribution of malicious events in these datasets may be representative of real world cyber alert data it creates many challenges for network defense. These challenges include the potential obfuscation of attack behavior, difficulty isolating malicious alerts interspersed throughout a stream of non-malicious alerts, and no ground truth labels. 
 
 \section{Generative Adversarial Networks}
 
+A Generative Adversarial Network (GAN) is a class of neural network where two neural networks are pitted against each other. One network, the generator (G), attempts to create samples which seem to belong to a ground truth dataset. The other network, the discriminator (D), takes inputs from the ground truth dataset as well as G, and flags samples as either real or fake. This structure minimizes the generator loss each time G successfully generates a sample that tricks D into marking the sample as real. Conversely, the discriminator loss is minimized when all samples from the ground truth set are marked as real and all samples created by G are marked as fake.
+
+GANs have been shown to achieve state of the art results in the fields of image, text, and audio sample generation. Additionally, they have been shown to also perform well at more complex tasks such as scene to scene translation in images, stylized image generation, and video transformation. This allows GANs to serve as a powerful way to artificially expand datasets which may require more samples than originally collected. The potential application of GANs only continues to grow as researchers in new fields apply them to challenging sample generation tasks.
+
+Despite these successes GANs have several shortcomings. They are noted as being 'data hungry' and are typically trained across very large datasets for many epochs. The loss functions do not represent the quality of the data, as both the generator and discriminator are continually learning; as one network becomes better it's loss may drop, only to rise back up in a few batches when the other network learns something new as well. This lack of convergence makes training and parameter tuning even more important than traditional Deep Learning models. Allowing one model to overpower the other starves the system from having any useful gradient feedback. Finally, output mode dropping may occur, as the generator may be penalized too severally as it tries to learn to generate samples which do not occur often. 
+
 \section{Problem Statement}
+
+Cyber event datasets typically lack homogeneity, are imbalanced, and are difficult to obtain and apply labels to. This poses a challenge to predictive models used for proactive Cyber Security. Generative Adversarial Networks encompass a type of neural network architecture which learns to recreate data based off the approximated PDF of an input training set. It is the goal of this research to explore the degree to which a GAN can emulate a dataset consisting of temporally linked cyber alerts. The fidelity of the generated data is challenged by GAN’s lack of convergence, potential for parameter setting collapse, and potential oversimplification of the features expressed in the sampled data. Further, the methods of identifying this fidelity is a non-trivial matter; no metric exists to indicate the fidelity of cyber event data. 
+
+To identify the fidelity a GAN recreates cyber alerts with, methods evaluating said fidelity must be defined. One proposed metric is to use the intersection of histograms for each feature, and each possible combination of features, between the real and generated dataset. This metric has the benefit of being intuitive to visualize and analyze for low dimensional representations of the data. Additionally, the Jensen Shannon Divergence may also be used to compare alerts from the ground truth and generated set; this metric has the benefit of a nonlinear penalty for failing to capture the true probability of specific outputs. Each of these metrics have a rich history for comparing discrete feature histograms. Finally, Joint and Conditional Entropy between varying alert features are shown to be able to hightlight the difficulty of generating a given feature, as well as critical feature relationships in each distribution. These values also reinforce the power of GANs, as they may be used to show that these feature dependencies are indeed captured by the model and important to successfully generating features which would not occur often if considered in isolation. 
+
+With each of the above proposed metrics there are unique insights and drawbacks. Histogram representation of the dataset allows the data to be analyzed wholelistically, but only after a cyber event has taken place. The scores provided by these metrics may also fail to account for the complexity of the dataset or fail to represent useful data. For example, the intersection of histograms between alert signatures would not be a full representation of cyber events, as alert signature alone does not provide enough contextual information to be useful. However, when coupled with other features, such as destination port or latent network information such as the target machine's purpose (e.g. HTTP Server) salient attack information may be inferred. This can lead to insights regarding the ability of the network to learn the behavior of the attackers, rather than replicate their actions identically. Comparing conditional entropy tables for the ground truth and generated dataset can help to identify critical relationships between features. That is to say, some feature values may only be learned by the generator because of their relationship to another feature's value.
 
 \chapter{Related Work}
 
-% Include a section on simulation and modeling?
+With the recent resurgence of Machine Learning, and newfound abilities of Deep Learning models, researchers across a variety of domains have begun to apply these methods to outstanding challenges in their fields. Cyber-Security has not evaded this, as Deep Neural Networks have been used for cyber event classification, forecasting, malicious traffic modification, and now data generation. This section shall be organized as follows: First, a survey of existing applications of Machine Learning to Cyber Security problems will be reviewed to illustrate the need for rich alert datasets. Then advances in generative models from other fields will be examined to better understand how state of the art generative models perform so well. And finally, the current use case of generative models for cyber security will be compared to the methods proposed by this work. 
 
 \section{Cyber Security and Machine Learning}
+
+The predominant application of Machine Learning to Cyber Security has been focused on the challenge of anomaly detection, attack classification, and event prediction. For all of these tasks intricate relationships must be considered between the various features of alerts as well as entire chains of temporally connected alerts. 
+
+In order to maintain these temporal relationships Recurrent Neural Networks have been employed. Specifically, Long Short Term Memory (LSTM) units allow for the network to learn how to weight the importance of prior events and when to forgot alerts entirely. These models have been applied to Cyber Physical Systems by Filonov \etal to identify anomolous behavior. Their results demonstrate the power of LSTM for Cyber Security as they outperform traditional methods such as PCA, FDA, DFDA, CVA and SVM based anomaly detection \cite{Filonov2016, Filonov2017}
+
+Staudemeyer...
+
 
 \section{Existing Generative Model Applications}
 
 \section{Applications of Generative Models to Network Traffic}
 
 \section{Summary}
+
+This work applies state of the art GAN models to cyber alert data collected via the Suricata NIDS. The alerts were collected from 10 student teams during an 8 hour long collegiate penetration testing competition (CPTC) as they attacked identical, isolated, instances of the same network topography. Two different years of competition data were tested independently, each representing different network topographies and attacker behaviors; additionally, illustrating the ability of a single network topography to learn and capture many different data distributions. 
+
+Unique preprocessing steps for handling cyber alert data, exhaustive model hyperparameter tuning, and methods of identifying generated sample fidelity are also provided. Namely, the usage of histogram intersection for n-tuple feature combinations is shown to be an effective and intuitive means of judging sample generation quality. Additionally, this metric may be coupled with joint and conditional entropy calculations to show dependencies between features of an alert, allowing for further introspection of attack behavior.
+
+Finally, the application of Mutual Information Estimate Maximization to current state of the art GANs is shown to improve sample generation.
 
 \chapter{Methodology}
 
