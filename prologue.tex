@@ -1,0 +1,77 @@
+% prologue.tex
+%
+% Author       : James Mnatzaganian
+% Contact      : http://techtorials.me
+% Date Created : 08/27/15
+%
+% Description  : The prologue used by "thesis.tex".
+%
+% Copyright (c) 2015 James Mnatzaganian
+
+% NOTE: All filler text has "TODO" written. This must be removed in the final copy!
+
+% Initialize starting pages to use Roman numerals
+\frontmatter
+
+% \begin{acknowledgments}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Acknowledgments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{acknowledgments}
+	\vfill
+	\begin{center}
+		\indent Most importantly, thank you to Dr. S. Jay Yang for providing me with the opportunity to assist in research throughout my undergraduate study. Your continued feedback and encouragement to challenge myself over the years has helped me to grow into a strong engineer and critical thinker. You have had a profound impact on me, and I can never thank you enough for that. Next, I would like to thank Dr. Raymond Ptucha, Dr. Sonia Lopez-Alarcon, and the rest of the RIT Computer Engineering faculty for their willingness to educate the next generation of Computer Engineers. Finally, I would like to thank the soon to be Dr. Stephen Moskall who provided me my first opportunity to work with him and Dr. Yang when I was in my second year of undergrad. I cannot thank you enough for the professional and personal advice, as well as the good times in lab, that you have provided over the last four years.  
+	\end{center}
+	\vfill
+\end{acknowledgments}
+% \end{acknowledgments}
+
+% \begin{dedication}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dedication
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{dedication}
+	\vfill
+	\begin{center}
+		To my mother and father, Debbie and Jack Sweet, who taught me the value of a strong work ethic. And to my brother, John, who always set an extremely high bar for me to try and beat.  Without your continued support and guidance I would never have been able to achieve all that I have. 
+	\end{center}
+	\vfill
+\end{dedication}
+% \end{dedication}
+
+%\begin{abstract}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Abstract
+\begin{abstract}
+	Enterprise computer networks continue to grow in complexity and importance as reliance on network operation for day to day activities grows. Additionally, the number and severity of attacks perpetrated against these networks also continually grows. These attacks can disrupt business operation, influence markets, and even impact governmental actions. Methods for capturing malignant network behavior are often employed through network intrusion detection systems to allow for real time traffic analysis and anomaly detection. However, cyber-alert data lacks homogeneity, is inherently imbalanced, and is difficult to isolate and apply labels to. This poses a challenge to predictive models used for proactive Cyber Security. 
+	
+	Generative Adversarial Networks (GAN) encompass a type of neural network architecture which learns to recreate data based off an existing dataset. GANs have now been applied to a variety of field, such as Computer Vision, Natural Language Processing, and Cyber Security for adversarial sample crafting. In Computer Vision and Natural Language Processing there are large publicly available datasets to use for training and testing machine learning models; in the field of Cyber Security few analogs exist. By turning towards data generative algorithms, smaller datasets with wide variability may be artificially expanded and used in further study/simulation. Additionally, feature dependencies may be revealed and analyzed allowing for direct application to improved network defense.
+	
+	This work applies state of the art Generative Adversarial Networks to known malicious cyber alert data with the intent of achieving high fidelity data generation. Unique preprocessing steps, model considerations, and training methods are reviewed. Additionally, several methods for data fidelity evaluation are proposed; Including intersection of histograms for varying combinations of features, Jensen Shannon Divergence, and conditional and joint entropy calculations. Thorough examination of these metrics is shown to not only identify key aspects of the performance of GANs applied to Cyber Alert data, but also key relationships in the network traffic behavior. 
+	
+\end{abstract}
+%\end{abstract}
+
+% \begin{introductory lists and tabels
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introductory Lists and Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Add TOC, list of figures, list of tables in that order
+\makealllists
+
+% Add the acronyms
+\glsaddall
+\printglossary[type=\acronymtype]
+
+% Reset all acronyms
+\glsresetall
+
+% Start using Arabic numbers
+\mainmatter
+% \end{introductory lists and tabels}
