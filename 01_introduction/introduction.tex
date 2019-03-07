@@ -1,19 +1,7 @@
-% introduction.tex
-%
-% Author       : James Mnatzaganian
-% Contact      : http://techtorials.me
-% Date Created : 08/27/15
-%
-% Description  : Introduction chapter used by "thesis.tex".
-%
-% Copyright (c) 2015 James Mnatzaganian
-
-% NOTE: All filler text has "TODO" written. This must be removed in the final copy!
-
 \chapter{Introduction}
 
 \section{Network Intrusion Detection Systems}
-A variety of packet capture tools exist to enable individuals and corporations alike to monitor traffic on their networks. Several tools take this logging a step further and allow for real time network intrusion detection. Network intrusion detection systems (NIDS) are a rule based system which allows for automated flagging of potentially malignant packet traffic through the aggregation of temporally contiguous packets;  These "alerts" typically consist of the believed attack signature, a category that the attack falls under, target machine, timestamp, and more.   For example, the Suricata NIDS is capable of processing up to $30,000$ packets per second. This kind of high volume traffic may occur when an attack initiates a comprehensive network scan and may only result in a few alerts stating that there is scanning activity occuring. These systems are employed to flag potentially malicious traffic, note long term patterns in traffic, and provide system administration with a trail of alerts to analyze after a cyber-attack has taken place. 
+A variety of packet capture tools exist to enable individuals and corporations alike to monitor traffic on their networks. Several tools take this logging a step further and allow for real time network intrusion detection. Network intrusion detection systems (NIDS) are a rule based system which allows for automated flagging of potentially malignant packet traffic through the aggregation of temporally contiguous packets;  These "alerts" typically consist of the believed attack signature, a category that the attack falls under, target machine, timestamp, and more.   For example, the Suricata NIDS (\texttt{https://suricata-ids.org/}) is capable of processing up to $30,000$ packets per second. This kind of high volume traffic may occur when an attack initiates a comprehensive network scan and may only result in a few alerts stating that there is scanning activity occuring. These systems are employed to flag potentially malicious traffic, note long term patterns in traffic, and provide system administration with a trail of alerts to analyze after a cyber-attack has taken place. 
 
 Though these tools provide network operators with a wealth of data to analyze they suffer from a fundamental issue. The data only exists after a cyber attack has already taken place, and therefore only allows for reactionary defense techniques. This has lead researchers to see if they can use this data, as well as simulations and extrapolation, to further understand network vulnerabilities in the pursuit of proactive cyber security. 
 
@@ -39,7 +27,7 @@ Despite these successes GANs have several shortcomings. They are noted as being 
 
 \section{Problem Statement}
 
-Cyber event datasets typically lack homogeneity, are imbalanced, and are difficult to obtain and apply labels to. This poses a challenge to predictive models used for proactive Cyber Security. Generative Adversarial Networks encompass a type of neural network architecture which learns to recreate data based off the approximated PDF of an input training set. It is the goal of this research to explore the degree to which a GAN can emulate a dataset consisting of temporally linked cyber alerts. The fidelity of the generated data is challenged by GAN’s lack of convergence, potential for parameter setting collapse, and potential oversimplification of the features expressed in the sampled data. Further, the methods of identifying this fidelity is a non-trivial matter; no metric exists to indicate the fidelity of cyber event data. 
+Cyber event datasets typically lack homogeneity, are imbalanced, and are difficult to obtain and apply labels to. This poses a challenge to predictive models used for proactive Cyber Security. Generative Adversarial Networks encompass a type of neural network architecture which learns to recreate data based off the approximated PDF of an input training set. It is the goal of this research to explore the degree to which a GAN can learn the intricate relationships of cyber alert features. The fidelity of the generated data is challenged by GAN’s lack of convergence, potential for parameter setting collapse, and potential oversimplification of the features expressed in the sampled data. Further, the methods of identifying this fidelity is a non-trivial matter; no metric exists to indicate the fidelity of cyber event data. 
 
 To identify the fidelity a GAN recreates cyber alerts with, methods evaluating said fidelity must be defined. One proposed metric is to use the intersection of histograms for each feature, and each possible combination of features, between the real and generated dataset. This metric has the benefit of being intuitive to visualize and analyze for low dimensional representations of the data. Additionally, the Jensen Shannon Divergence may also be used to compare alerts from the ground truth and generated set; this metric has the benefit of a nonlinear penalty for failing to capture the true probability of specific outputs. Each of these metrics have a rich history for comparing discrete feature histograms. Finally, Joint and Conditional Entropy between varying alert features are shown to be able to hightlight the difficulty of generating a given feature, as well as critical feature relationships in each distribution. These values also reinforce the power of GANs, as they may be used to show that these feature dependencies are indeed captured by the model and important to successfully generating features which would not occur often if considered in isolation. 
 
