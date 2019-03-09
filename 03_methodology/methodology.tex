@@ -50,7 +50,16 @@ To this end, we propose the usage of several metrics for analyzing NIDS alert da
 	G = {{\sum_{i=0}^{N} min(gt_i, gen\_i)} \over {max(\sum_{i=0}^{N} gt_i, \sum_{i=0}^{N} gen_i)}}
 \end{equation}
 
-Another powerful trait of histogram intersection is that it can be used to reveal dependencies between features within a single alert. This is accomplished by looking at the difference in histogram intersection scores between $n\pm1$ tuples and observing the intersection drop. An intuitive example of this can be thought of as follows; If the intersection for feature $A$ is 0.9 and the intersection for a 2-tuple histogram consisting of features $A$ and $B$ is $0.875$ then it is expected that a dependency exists between $A$ and $B$. It is important to note that this dependency is not inherently bidirectional, as $A$ and $B$ may have varying intersections to begin with. Fig. \ref{fig:I haven't made this yet} illustrates a graph based schema to identify these dependencies visually. 
+Another powerful trait of histogram intersection is that it can be used to reveal dependencies between features within a single alert. This is accomplished by looking at the difference in histogram intersection scores between $n\pm1$ tuples and observing the intersection drop. An intuitive example of this can be thought of as follows; If the intersection for feature $A$ is 0.9 and the intersection for a 2-tuple histogram consisting of features $A$ and $B$ is $0.875$ then it is expected that a dependency exists between $A$ and $B$. It is important to note that this dependency is not inherently bidirectional, as $A$ and $B$ may have varying intersections to begin with. Fig. \ref{fig:metric_graph} illustrates a graph based schema to identify these dependencies visually. 
+
+\begin{figure}[!htbp]
+	\centering%
+	\includegraphics[width=70mm]{metric_graph}
+	\caption{
+		Note that along the edges heading from Nodes A and B are the conditional entropy term may be visualized. The point where the two segments join and travel to the node labeled A,B represents the joint entropy term.
+	}
+	\label{fig:metric_graph}
+\end{figure}
 
 In order to confirm these dependencies we introduce our second metric; conditional entropy. The conditional entropy of each unique \emph{permutation} may be calculated for each m-tuple of features. Continuing with the previous example this means the conditional entropy of both $A|B$ and $B|A$ are computed. In order to compute a single value that represents the average conditional entropy for all input condition values, the entropy term is computed using (\ref{eq:wce}). This calculation weights the entropy of each possible input combination based off the probability that input $i$ occurs as ${{|w_i|} \over {|w|}}$. ${p_{i|j}}$ represents the probability of the output feature value at index $j$ occurring given the input feature values at index $i$ and must be computed for possible output values $Z$.
 
