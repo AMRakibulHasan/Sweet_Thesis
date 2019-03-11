@@ -1,17 +1,141 @@
-% background.tex
-%
-% Author       : James Mnatzaganian
-% Contact      : http://techtorials.me
-% Date Created : 08/27/15
-%
-% Description  : Background chapter used by "thesis.tex".
-%
-% Copyright (c) 2015 James Mnatzaganian
+\chapter{Model Architectures and Training}
+\label{sec:model_arch}
+Two GAN implementations were created to generate artificial cyber alert data; a standard Wasserstein GAN with Gradient Penalty and an extension of this model which used a neural estimate of mutual information to regularize the generator output.  
 
-\chapter{Design Implementation}
+\section{Wasserstein GAN with Gradient Penalty}
+\label{sec:gan}
+The Wasserstein GAN with Gradient Penalty makes no architectural changes to model structure compared to standard GANs. Rather, the loss function is modified to use the Earthmover Distance. This modification has been shown to create empirically better results and allows for flexibility in model selection adapted to the challenge at hand.
 
-\section{Model Architecture}
+Since the goal of this work was to create individual NIDS alerts without temporal correlation a feed-forward network architecture was selected for both the generator and discriminator. 
 
-\subsection{Improving Model output through Mutual Information Contraints}
+The generator consisted of 2 layers. The first layer sampled from noise space $\mathbb{Z}$ to a hidden representation. The next layer was directly responsible for each feature's output value. This layer consisted of four individual mappings from the hidden representation to an output layer with cardinality equal to the number of unique values per feature. Finally, a concatenation was used to take the prior 4 outputs and create a full 1-hot encoded alert. 
+
+The discriminator also consisted of 2 layers. The first layer took 1-hot encoded alerts as input and mapped them to a hidden representation. The next layer mapped this hidden representation to a scalar value representing the probability that the alert was from the ground truth dataset. A graphical model is included in Fig. \ref{fig:model_simple}, alongside Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, showing the dimensions of the weight matrices and model loss with backpropagation.
+
+\begin{figure}[!htbp]
+	\centering%
+	\includegraphics[width=\textwidth]{model_simple}
+	\caption{
+		Inputs to the network are highlighted in yellow. Learnable weight layers are in blue. The concatenation in orange is a non-backpropable layer used only to prepare generator output for input to the discriminator. The red boxes and lines represent the model loss functions and back-propagation.
+	}
+	\label{fig:model_simple}
+\end{figure}
+
+
+\begin{table}[!htbp]
+	\centering
+	\label{tab:model_simple_a}
+	\caption{Generator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\begin{tabular}{l|l|l}
+		\hline
+		\multicolumn{3}{c}{\textbf{Generator}} \\ 
+		\hline
+		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
+		Input & 64 x 128 & ReLu \\
+		Output - Feature 0 & 128 x a & NA \\
+		Output - Feature 1 & 128 x b & NA \\
+		Output - Feature 2 & 128 x c & NA \\
+		Output  - Feature 3 & 128 x d & NA \\
+		Concatenation & a+b+c+d & NA \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\label{tab:model_simple_b}
+	\caption{Discriminator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\begin{tabular}{l|l|l}
+		\hline
+		\multicolumn{3}{c}{\textbf{Discriminator}} \\ 
+		\hline
+		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
+		Input & a+b+c+d x 128 & ReLu \\
+		Output & 128 x 1 & Sigmoid \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+\section{Mutual Information Neural Estimator}
+\label{sec:mine}
+Mutual Information is a measure of dependence between two random variables. Traditionally, approximations have to be used to estimate the mutual information between high dimensional and continuous variables as exact computation is intractable. The Mutual Information Neural Estimator is a neural network which allows for state of the art approximation of mutual information. This is done by optimizing the network to minimize the Donsker-Varadhan representation of the KL divergence between two variables. 
+
+A feed forward neural network was implemented to learn the mutual information between the gaussian noise sampled from $\mathbb{Z}$ and the generators output. This network consisted of 2 layers. The first layer took input from each of the aforementioned sources and mapped them to separate hidden representation layers and added together. Then the second layer mapped the hidden representation to a single output value representing the mutual information estimate. Table \ref{tab:model_mi} shows the matrix dimension for each of the layers in the network.
+
+\begin{table}[!htbp]
+	\centering
+	\label{tab:model_mi}
+	\caption{Mutual Information Estimator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\begin{tabular}{l|l|l}
+		\hline
+		\multicolumn{3}{c}{\textbf{Estimator}} \\ 
+		\hline
+		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
+		Input - Generated & a+b+c+d x 128 & ReLu \\
+		Input - Noise & 64 x 128 & NA \\
+		Addition & 128 & NA \\ 
+		Output & 128 x 1 &  NA \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+\section{GAN with Mutual Information Constraint}
+\label{sec:gpmi}
+In order to improve mode dropping in the GAN model described in Section \ref{sec:gan} the mutual information neural estimator in Section \ref{sec:mine} is added to the model. This is done by using the mutual information between the generated samples and the input noise as a proxy for the neg-entropy of the samples and using it to regularize the generator's weights. We refer to this model as the Wasserstein GAN with Gradient Penalty and Mutual Information (WGAN-GPMI). Fig. \ref{fig:model_complex} shows what the full model consists of. 
+
+\begin{figure}[!htbp]
+	\centering%
+	\includegraphics[width=\textwidth]{model_complex}
+	\caption{
+		The addition of the Mutual Information Estimation Network helps to enforce that the generator must learn all output modes of the distribution by fully exploiting the noise sample
+	}
+	\label{fig:model_complex}
+\end{figure}
+
+Since mutual information is theoretically unbounded, gradient updates resulting from it could overwhelm the adversarial gradients resulting from the Earthmover Distance. In order to address this all of the gradient updates to the generator are adaptively clipped to ensure that the Frobenius norm of the gradient resulting from the mutual information is at most equal to the adversarial gradient \cite{Belghazi2018}.
 
 \section{Model Training}
+
+Training GANs is a notoriously tricky task as loss score is not a fair representation of whether the model has converged to generating realistic data. Like many traditional Deep Learning models, hyperparameter tuning is critical to model performance for GANs. This creates a challenge while training GANs, especially with unconventional datasets where metrics like Inception Score cannot be applied. In order to address this and exhaustive hyperparameter search for each of the GAN models above was carried out. First, individual parameters were tuned in order to find candidate values. Then, these candidate values were used in a search of all possible parameter combinations.
+
+Using the histogram intersection metric proposed in Section \ref{sec:anal} across all combinations of features, the hyperparameter setting which achieved the most intersection scores in the $90-th$ percentile were selected as optimal. More details about the result of this search will be covered in Section \ref{sec:rna}. Table \ref{tab:params} shows the optimal hyperparameter values for each model.
+
+\begin{table}[!htb]
+	\centering
+	\caption{Optimal Hyperparameter Settings}
+	\label{tab:params}
+	\begin{subtable}{.5\linewidth}
+		\centering
+		\caption{}
+		\begin{tabular}{l|l}
+			\hline
+			\multicolumn{2}{c}{\textbf{WGAN-GP}} \\ 
+			\hline
+			Epochs & 180 \\
+			Batch Size & 100 \\
+			Learning Rate & 1e-5 \\
+			Lambda & 0.1 \\
+			Beta 1 & 0.5 \\
+			Beta 2 & 0.9 \\
+			Hidden Dimension & 128                  
+		\end{tabular}
+	\end{subtable}%
+	\begin{subtable}{.5\linewidth}
+		\centering
+		\caption{}
+		\begin{tabular}{l|l}
+			\hline
+			\multicolumn{2}{c}{\textbf{ WGAN-GPMI}} \\ 
+			\hline
+			Epochs & 250 \\
+			Batch Size & 100 \\
+			Learning Rate & 5e-4 \\
+			Lambda & 0.4 \\
+			Beta 1 & 0.5 \\
+			Beta 2 & 0.8 \\
+			Hidden Dimension & 128                  
+		\end{tabular}
+	\end{subtable}%	
+\end{table}
