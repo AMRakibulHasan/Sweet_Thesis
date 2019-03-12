@@ -26,24 +26,30 @@ This two stage search was carried out twice, once for each of the GAN models pre
 The batch size determines how many alert samples were fed into the model in parallel. Higher batch sizes can are more computationally intensive, but provide a better representation of the ground truth data distribution. Additionally, larger batch sizes reduce the number of steps required to complete a full epoch of training. 
 
 The values tested for batch size were $\{10, 25, 50, 100, 150, 250, 500, 1000\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_batch_size} and Fig. \ref{fig:gpmi_batch_size} respectively.
-
 \begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{wgan_batch_size}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=180$, $learning\_rate=5e-5$, $hidden\_dimension=128$, $\lambda=0.1$
-	}
-	\label{fig:wgan_batch_size}
+	\centering
+	\caption{Batch Size Parameter Search}
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_batch_size}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $learning\_rate=5e-5$, $hidden\_dimension=128$, $\lambda=0.1$
+		}
+		\label{fig:wgan_batch_size}
+	\end{subfigure}%
+
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_batch_size}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $learning\_rate=5e-4$, $hidden\_dimension=128$, $\lambda=0.3$
+		}
+		\label{fig:gpmi_batch_size}
+	\end{subfigure}%
 \end{figure}
 
-\begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{gpmi_batch_size}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=250$, $learning\_rate=5e-4$, $hidden\_dimension=128$, $\lambda=0.3$
-	}
-	\label{fig:gpmi_batch_size}
-\end{figure}
 
 
 % TODO: Analysis
@@ -53,24 +59,30 @@ The hidden dimension size determines the number of hidden units available in eac
 
 The values tested for hidden dimension were $\{64, 128, 256, 384, 512\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_hdim} and Fig. \ref{fig:gpmi_hdim} respectively. 
 
-
 \begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{wgan_hdim}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $\lambda=0.1$
-	}
-	\label{fig:wgan_hdim}
+	\centering
+	\caption{Hidden Dimension Parameter Search}
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_hdim}		
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $\lambda=0.1$
+		}
+		\label{fig:wgan_hdim}
+	\end{subfigure}%
+	
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_hdim}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $\lambda=0.3$
+		}
+		\label{fig:gpmi_hdim}
+	\end{subfigure}%
 \end{figure}
 
-\begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{gpmi_hdim}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $\lambda=0.3$
-	}
-	\label{fig:gpmi_hdim}
-\end{figure}
 
 % TODO: Analysis
 
@@ -78,25 +90,32 @@ The values tested for hidden dimension were $\{64, 128, 256, 384, 512\}$. The in
 The learning rate of the optimizer defines the base step size, weighted by the gradient of the loss, that is taken when adjusting parameter weights during training. A large learning rate converges quickly, but may overshoot the global optimum and never reach peak performance. A small learning rate won't overshoot the global optimum, however will take significantly longer to converge. Due to the categorical output of alert data and existing difficulty in optimizing GANs, small learning rates were tested. This allowed the network to be able to make fine tuned changes to network weights. Additionally, the ADAM optimizer was used, allowing for weight decay over time to modify the learning rate parameter. 
 
 
-The values tested for hidden dimension were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lr} and Fig. \ref{fig:gpmi_lr} respectively. 
+The values tested for learning rate were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lr} and Fig. \ref{fig:gpmi_lr} respectively. 
 
 \begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{wgan_lr}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $hidden\_dimension=128$, $\lambda=0.1$
-	}
-	\label{fig:wgan_lr}
+	\centering
+	\caption{Learning Rate Parameter Search}
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $hidden\_dimension=128$, $\lambda=0.1$
+		}
+		\label{fig:wgan_lr}
+	\end{subfigure}%
+
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $hidden\_dimension=128$, $\lambda=0.3$
+		}
+		\label{fig:gpmi_lr}
+	\end{subfigure}%
 \end{figure}
 
-\begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{gpmi_lr}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $hidden\_dimension=128$, $\lambda=0.3$
-	}
-	\label{fig:gpmi_lr}
-\end{figure}
 
 % TODO: Analysis
 
@@ -104,22 +123,29 @@ The values tested for hidden dimension were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. 
 The lambda parameter was used as a coefficient to the gradient penalty term applied to the discriminator. The values tested for lambda were $\{0.05, 0.1, 0.2, 0.3, 0.4\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lam} and Fig. \ref{fig:gpmi_lam} respectively.
 
 \begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{wgan_lr}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$
-	}
-	\label{fig:wgan_lam}
+	\centering
+	\caption{Lambda Parameter Search}
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$
+		}
+		\label{fig:wgan_lam}
+	\end{subfigure}%
+
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$
+		}
+		\label{fig:gpmi_lam}
+	\end{subfigure}%
 \end{figure}
 
-\begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{gpmi_lr}
-	\caption{
-		All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$
-	}
-	\label{fig:gpmi_lam}
-\end{figure}
 
 % TODO: Analysis
 
@@ -129,22 +155,29 @@ The number of epochs determined how many times the network was exposed to the fu
 Due to the small size of the CPTC dataset, large values for epochs were tested. These values included $\{50, 100, 150, 200, 250\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_epoch} and Fig. \ref{fig:gpmi_epoch} respectively. 
 
 \begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{wgan_epoch}
-	\caption{
-		All other hyperparameters were held constant at the following values: $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$, $\lambda=0.1$
-	}
-	\label{fig:wgan_epoch}
+	\centering
+	\caption{Epochs Parameter Search}
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_epoch}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$, $\lambda=0.1$
+		}
+		\label{fig:wgan_epoch}
+	\end{subfigure}%
+
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_epoch}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$, $\lambda=0.3$
+		}
+		\label{fig:gpmi_epoch}
+	\end{subfigure}%
 \end{figure}
 
-\begin{figure}[!htbp]
-	\centering%
-	\includegraphics[width=\textwidth]{gpmi_epoch}
-	\caption{
-		All other hyperparameters were held constant at the following values: $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$, $\lambda=0.3$
-	}
-	\label{fig:gpmi_epoch}
-\end{figure}
 
 % TODO: Analysis
 
