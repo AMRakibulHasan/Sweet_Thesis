@@ -16,19 +16,74 @@ Each of the GAN models described in Section \ref{sec:model_arch} were used to cr
 
 \end{enumerate}
 
+The CPTC'17 dataset was segmented on per-target IP basis and used across all experiments. For the hyper parameter search the IP which contained the most alerts, 10.0.0.100, was used. For the following experiments on alert fidelity, modeling dependency, and output modes captured the following four IP's were used: \{10.0.0.100, 10.0.0.22, 10.0.0.27, 10.0.99.143\}. These four IP addresses provided a mixture of Windows and Linux Machines, with varying purpose, and contained the 4 greatest counts of alerts. Table. \ref{tab:mapping} summarizes the differences between each of these machines. 
+
+\begin{table}[!htbp]
+	\caption{Mapping of Target IP Address to Machine Usage/Purpose}
+	\label{table:mapping}
+	\centering
+	\begin{tabular}{c|c|c|c}
+		\textbf{IP Address} & \textbf{Operating System} & \textbf{Machine Usage} & \textbf{Number of Alerts}\\
+		\hline 
+		10.0.0.100 & Windows & Active Directory Server & 3388\\
+		\hline
+		10.0.0.27 & Ubuntu & HTTP Server & 3166\\
+		\hline
+		10.0.0.22 & Ubuntu & MySQL Server & 2974\\
+		\hline
+		10.0.99.143 & Ubuntu & HTTP Server & 2182
+	\end{tabular}
+\end{table}
+ 
+It was important to consider the machines with the greatest number of alerts as Deep Learning, especially for GANs, requires very large datasets.
+
 \section{Thorough Hyperparameter Search}
 \label{sec:search}
 A two part hyperparameter search was employed to find optimal values for generating alerts from the CTPC datasets. First, individual parameters were tested in order to find several values which resulted in promising results. For each parameter value tested, the histogram intersection was computed for all possible feature value combinations. These values were then plotted against all other parameter settings results for WGAN-GP and WGAN-GPMI. Then, these values were taken and used for a full parameter sweep, which tested every possible combination of the parameter values available. Several candidate values were selected for each of the hyperparameters due to the unknown nature of hyperparameter interaction.
 
-This two stage search was carried out twice, once for each of the GAN models presented in Section \ref{sec:model_arch}. The parameters tested included batch size, hidden dimension, learning rate, lambda, and number of epochs.
+This two stage search was carried out twice, once for each of the GAN models presented in Section \ref{sec:model_arch}. The parameters tested included lambda, batch size, learning rate, hidden dimension, and number of epochs.
+
+\subsection{Lambda}
+\label{sec:lam}
+The lambda parameter was used as a coefficient to the gradient penalty term applied to the discriminator. The values tested for lambda were $\{0.05, 0.1, 0.2, 0.3, 0.4\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lam} and Fig. \ref{fig:gpmi_lam} respectively.
+
+\begin{figure}[!htbp]
+	\centering
+	
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_lam}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$
+		}
+		\label{fig:wgan_lam}
+	\end{subfigure}%
+	
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_lam}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$
+		}
+		\label{fig:gpmi_lam}
+	\end{subfigure}%
+	\caption{Lambda Parameter Search}
+\end{figure}
+
+The performance of all the values tested was very close. For the WGAN-GP model smaller values such as $\{0.05, 0.1, 0.2\}$ performed well. In the WGAN-GPMI model the larger values tested, $\{0.2,0.3,0.4\}$ performed well. This suggests that the WGAN-GPMI model requires stronger enforcement of the gradient penalty than the WGAN-GP model does. Given that the gradient of the generator is changed from an outside source (the mutual information estimate) in addition to the discriminator feedback, the discriminator may be trying to make larger gradient changes to identify generated samples. 
+
 
 \subsection{Batch Size}
+\label{sec:bs}
+
 The batch size determines how many alert samples were fed into the model in parallel. Higher batch sizes can are more computationally intensive, but provide a better representation of the ground truth data distribution. Additionally, larger batch sizes reduce the number of steps required to complete a full epoch of training. 
 
 The values tested for batch size were $\{10, 25, 50, 100, 150, 250, 500, 1000\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_batch_size} and Fig. \ref{fig:gpmi_batch_size} respectively.
+
 \begin{figure}[!htbp]
 	\centering
-	\caption{Batch Size Parameter Search}
 	\begin{subfigure}{.7\textwidth}
 		\includegraphics[width=\textwidth]{wgan_batch_size}
 	\end{subfigure}%
@@ -48,20 +103,55 @@ The values tested for batch size were $\{10, 25, 50, 100, 150, 250, 500, 1000\}$
 		}
 		\label{fig:gpmi_batch_size}
 	\end{subfigure}%
+	\caption{Batch Size Parameter Search}
 \end{figure}
 
+The overall range and trends of intersection scores are very similar for both WGAN-GP and WGAN-GPMI. It is interesting to observe that for the WGAN-GPMI model that the performance drop after using batch sizes greater than 250 is much greater than that of the WGAN-GP model. Regardless, the top selections for the full parameter search are $\{10,25,50,100,150\}$ for the WGAN model and $\{50,100\}$ for the WGAN-GPMI model.
+
+\subsection{Learning Rate}
+\label{sec:lr}
+
+The learning rate of the optimizer defines the base step size, weighted by the gradient of the loss, that is taken when adjusting parameter weights during training. A large learning rate converges quickly, but may overshoot the global optimum and never reach peak performance. A small learning rate won't overshoot the global optimum, however will take significantly longer to converge. Due to the categorical output of alert data and existing difficulty in optimizing GANs, small learning rates were tested. This allowed the network to be able to make fine tuned changes to network weights. Additionally, the ADAM optimizer was used, allowing for weight decay over time to modify the learning rate parameter. 
 
 
-% TODO: Analysis
+The values tested for learning rate were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lr} and Fig. \ref{fig:gpmi_lr} respectively. 
+
+\begin{figure}[!htbp]
+	\centering
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{wgan_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $hidden\_dimension=128$, $\lambda=0.1$
+		}
+		\label{fig:wgan_lr}
+	\end{subfigure}%
+	
+	\begin{subfigure}{.7\textwidth}
+		\includegraphics[width=\textwidth]{gpmi_lr}
+	\end{subfigure}%
+	\begin{subfigure}{.3\textwidth}
+		\caption{
+			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $hidden\_dimension=128$, $\lambda=0.3$
+		}
+		\label{fig:gpmi_lr}
+	\end{subfigure}%
+	\caption{Learning Rate Parameter Search}
+\end{figure}
+
+For both of the models tested, the smallest learning rate $1e-5$ performs poorly. Interestingly, in the WGAN-GP model the subsequent three learning rates $\{5e-5,1e-4,5e-4\}$ oscillate between performing well and poorly. due to this oscillations $1e-4$ is dropped, leaving $\{5e-5,5e-4,1e-3\}$ for the full parameter search. For the WGAN-GPMI model $\{1e-4, 5e-4, 1e-3\}$ are all used in the full parameter test. 
+
 
 \subsection{Hidden Dimension}
+\label{sec:hdim}
+
 The hidden dimension size determines the number of hidden units available in each hidden layer. Higher hidden dimensions provide more learnable connections to the network allowing the network to complex approximations. On the other hand, larger hidden dimension sizes leads to potential overfitting and raises the computational complexity of training the network. 
 
 The values tested for hidden dimension were $\{64, 128, 256, 384, 512\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_hdim} and Fig. \ref{fig:gpmi_hdim} respectively. 
 
 \begin{figure}[!htbp]
 	\centering
-	\caption{Hidden Dimension Parameter Search}
 	\begin{subfigure}{.7\textwidth}
 		\includegraphics[width=\textwidth]{wgan_hdim}		
 	\end{subfigure}%
@@ -81,82 +171,22 @@ The values tested for hidden dimension were $\{64, 128, 256, 384, 512\}$. The in
 		}
 		\label{fig:gpmi_hdim}
 	\end{subfigure}%
+	\caption{Hidden Dimension Parameter Search}
 \end{figure}
 
 
-% TODO: Analysis
+The range of histogram intersection scores for the hidden parameter search is far smaller than the other hyperparameters. For the WGAN-GP model $\{128, 256, 384\}$ had the highest intersection scores, while $\{64,128,256\}$ performed well for the WGAN-GPMI model. 
 
-\subsection{Learning Rate}
-The learning rate of the optimizer defines the base step size, weighted by the gradient of the loss, that is taken when adjusting parameter weights during training. A large learning rate converges quickly, but may overshoot the global optimum and never reach peak performance. A small learning rate won't overshoot the global optimum, however will take significantly longer to converge. Due to the categorical output of alert data and existing difficulty in optimizing GANs, small learning rates were tested. This allowed the network to be able to make fine tuned changes to network weights. Additionally, the ADAM optimizer was used, allowing for weight decay over time to modify the learning rate parameter. 
-
-
-The values tested for learning rate were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lr} and Fig. \ref{fig:gpmi_lr} respectively. 
-
-\begin{figure}[!htbp]
-	\centering
-	\caption{Learning Rate Parameter Search}
-	\begin{subfigure}{.7\textwidth}
-		\includegraphics[width=\textwidth]{wgan_lr}
-	\end{subfigure}%
-	\begin{subfigure}{.3\textwidth}
-		\caption{
-			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $hidden\_dimension=128$, $\lambda=0.1$
-		}
-		\label{fig:wgan_lr}
-	\end{subfigure}%
-
-	\begin{subfigure}{.7\textwidth}
-		\includegraphics[width=\textwidth]{gpmi_lr}
-	\end{subfigure}%
-	\begin{subfigure}{.3\textwidth}
-		\caption{
-			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $hidden\_dimension=128$, $\lambda=0.3$
-		}
-		\label{fig:gpmi_lr}
-	\end{subfigure}%
-\end{figure}
-
-
-% TODO: Analysis
-
-\subsection{Lambda}
-The lambda parameter was used as a coefficient to the gradient penalty term applied to the discriminator. The values tested for lambda were $\{0.05, 0.1, 0.2, 0.3, 0.4\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_lam} and Fig. \ref{fig:gpmi_lam} respectively.
-
-\begin{figure}[!htbp]
-	\centering
-	\caption{Lambda Parameter Search}
-	\begin{subfigure}{.7\textwidth}
-		\includegraphics[width=\textwidth]{wgan_lr}
-	\end{subfigure}%
-	\begin{subfigure}{.3\textwidth}
-		\caption{
-			All other hyperparameters were held constant at the following values: $epochs=180$, $batch\_size = 100$, $learning\_rate=5e-5$, $hidden\_dimension=128$
-		}
-		\label{fig:wgan_lam}
-	\end{subfigure}%
-
-	\begin{subfigure}{.7\textwidth}
-		\includegraphics[width=\textwidth]{gpmi_lr}
-	\end{subfigure}%
-	\begin{subfigure}{.3\textwidth}
-		\caption{
-			All other hyperparameters were held constant at the following values: $epochs=250$, $batch\_size=100$, $learning\_rate=5e-4$, $hidden\_dimension=128$
-		}
-		\label{fig:gpmi_lam}
-	\end{subfigure}%
-\end{figure}
-
-
-% TODO: Analysis
 
 \subsection{Epochs}
+\label{sec:epoch}
+
 The number of epochs determined how many times the network was exposed to the full dataset during training. Using a large number of epochs allows for the network to get more exposure to the ground truth distribution. However using a very large number of epochs can lead to the network memorizing the data. 
 
 Due to the small size of the CPTC dataset, large values for epochs were tested. These values included $\{50, 100, 150, 200, 250\}$. The intersection vs. parameter setting plots for WGAN-GP and WGAN-GPMI may be seen in Fig. \ref{fig:wgan_epoch} and Fig. \ref{fig:gpmi_epoch} respectively. 
 
 \begin{figure}[!htbp]
 	\centering
-	\caption{Epochs Parameter Search}
 	\begin{subfigure}{.7\textwidth}
 		\includegraphics[width=\textwidth]{wgan_epoch}
 	\end{subfigure}%
@@ -176,21 +206,164 @@ Due to the small size of the CPTC dataset, large values for epochs were tested. 
 		}
 		\label{fig:gpmi_epoch}
 	\end{subfigure}%
+	\caption{Epochs Parameter Search}
 \end{figure}
 
+Increasing the number of epochs is critical for the WGAN-GPMI model to perform well. This makes intuitive sense, as this model requires the optimization of three neural networks. The $30$ epochs test case highlights this, as nearly all 3-tuple and 4-tuple feature combinations have 0 intersection with the ground truth distribution. Comparatively, the WGAN-GP model is able to achieve results within the range of $20-30$ percent; still the worst result of the values tested, but significantly better than WGAN-GPMI. For the WGAN-GP model, $\{100,150,200\}$ epochs were selected for the full hyperparameter sweep. For the WGAN-GPMI model, $\{150, 200, 250\}$ were selected. 
 
-% TODO: Analysis
+\subsection{Full Parameter Sweep}
+
+Collecting the candidate values from Sections \ref{sec:lam} through \ref{sec:epoch}, a full parameter search was carried out to test all combinations of these values. The values under test for each model may be seen in Table \ref{tab:param_sweep}, along with the unique number of combinations tested. 
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Candidate Parameters for WGAN-GP and WGAN-GPMI}
+	\label{tab:param_sweep}
+	\begin{tabular}{l|ccccc|l|cccl}
+		\cline{1-11}
+		\multicolumn{6}{c}{\textbf{WGAN-GP Parameters}} & \multicolumn{1}{l}{} & \multicolumn{4}{c}{\textbf{WGAN-GPMI Parameters}} \\ 
+		\cline{1-11} 
+		Lambda & 0.05 & 0.1 & 0.2 & & & & 0.2 & 0.3 & 0.4 & \\
+		Batch Size & 10 & 25 & 50 & 100 & 150 & & 50 & 100 &  & \\
+		Learning Rate & 5e-5 & 5e-4 & 1e-3 & & & & 5e-5 & 1e-4 & 5e-4 & 1e-3 \\
+		Hidden Dimension & 128 & 256 & 384 & & & & 64 & 128 & 256 & \\
+		Epochs & 100 & 150 & 200 & & & & 150 & 200 & 250 & \\ 
+		\cline{1-11}
+		\multicolumn{3}{l|}{Number of Unique Combinations} & \multicolumn{3}{c}{405} & \multicolumn{1}{|l|}{} & \multicolumn{4}{c}{216} \\ \cline{1-11}
+	\end{tabular}
+\end{table}
+
+Given the scale of the combinations tested a simple 3 step heuristic was defined to identify the combinations which performed well. For each unique combination of features:
+\begin{enumerate}
+	\item The highest intersection score achieved was highlighted in yellow.
+	\item Intersection scores that fell within the 90th percentile were highlighted in green
+	\item Intersection scores that fell within the 80th percentile were highlighted in red. 
+\end{enumerate}
+
+This system reduced the search of possible combinations, and allowed for quick visual identification of values which performed well. Identifying the highest intersection score per feature combination is not sufficient criteria to identify the best hyperparameter combination as scores are very close and can be noisy. Adding in the $90^{th}$ constraint helps to identify other candidates with high performing intersection scores. Finally, the $80^{th}$ percentile constraint is meant to act as a lower bound as values which fall within in it are still good, and values which are not highlighted at all should raise questions about model performance. For example, if the individual feature intersections are within the $90^{th}$ percentile but 3-tuple and 4-tuple combinations are completely not highlighted, the model may have failed to capture high order dependencies in the distribution of the data. Thus, that parameter setting should not be considered for use in future experiments. 
+
+A subsection of the highlighted table for the WGAN-GP model is given in Fig. \ref{fig:highlighted_param_wgan}. Note that the row with the red arrow pointing to it performs well, as 6 of it's 15 values are the highest performing intersection scores with an additional 6 in the $90^{th}$ percentile. 
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textheight,height=\textwidth,angle=90]{gpmi_full_param_search}
+	\caption{
+		Subsection of WGAN-GP Hyperparameter Search Results 
+	}
+	\label{fig:highlighted_param_wgan}
+\end{figure}
+
+Similarly, a subsection of the highlighted table for the WGAN-GPMI model is given in Fig. \ref{fig:highlighted_param_gpmi}. Note that the row with the red arrow pointing to it performs well, as 6 of it's 15 values are the highest performing intersection scores with an additional 6 in the $90^{th}$ percentile. 
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textheight,height=\textwidth,angle=90]{gpmi_full_param_search}
+	\caption{
+		Subsection of WGAN-GPMI Hyperparameter Search Results
+	}
+	\label{fig:highlighted_param_gpmi}
+\end{figure}
 
 
 \section{Alert Fidelity}
 \label{sec:fidel}
 
+Two metrics were employed in order to identify the fidelity of alert generation. Each metric was scaled such that it could be used to analyze individual feature performance as well as n-tuple combinations of features. This allowed for both low and high level performance of the model to be assessed. These metrics were the Histogram Intersection and Jensen Shannon Divergence. 
 
+\subsection{Histogram Intersection}
+\label{sec:inter}
+
+The histogram intersection was computed for all feature combinations across all 4 IPs tested. For each IP, all possible combinations of features were analyzed. This resulted in 4 intersections representing the individual features, 6 representing pairs of features, 4 representing 3-tuples, and a single histogram representing 4-tuple combinations. 
+
+Fig. \ref{fig:inter} steps through these levels of combinations for target 10.0.0.100. The top left plot shows the intersection of timebins. The top right plot shows the histogram combination of timebin and destination port category. The bottom right adds the alert signature feature to the histogram. And finally, the bottom right shows all 4 features under test as a single joint histogram. It is important to note that as the number of features considered in the combination increases so does the complexity of recreating the data with high fidelity; individual occurrences of features drops, while the number of unique features to output rises. 
+
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textwidth]{10_0_0_100_inter_gpmi}
+	\caption{
+		WGAN-GPMI Intersection of Histograms Across All N-Tuples
+	}
+	\label{fig:inter}
+\end{figure}
+
+The histogram intersection was used to analyze the fidelity of results from both of the models tested. In general, the WGAN-GPMI is able to outperform the standard WGAN-GP model. This suggests that the mutual information constraint results in a model which manages to emulate the ground truth distribution with a higher degree of accuracy than standard models are. Table \ref{tab:inter} summarizes the results of both models across all 4 target IP addresses. 
+
+
+\begin{table}[!htbp]
+	\caption{Normalized Joint Entropy Values for all Victim IPs}
+	\label{tab:inter}
+	\centering
+	\begin{adjustbox}{angle=90}
+	\begin{tabular}{l|c|c|c|c|c|c|c|c|c|}
+		\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
+		\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
+		\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} & \textbf{} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \hline
+		\textbf{A} & 0.655 & 0.691 & 0.675 & 0.700 &  & 0.664 & 0.788 & 0.783 & 0.887 \\
+		\textbf{D} & 0.597 & 0.633 & 0.566 & 0.712 &  & 0.347 & 0.713 & 0.826 & 0.867 \\
+		\textbf{S} & 0.613 & 0.680 & 0.551 & 0.580 &  & 0.349 & 0.767 & 0.699 & 0.792 \\
+		\textbf{T} & 0.671 & 0.742 & 0.684 & 0.613 &  & 0.630 & 0.803 & 0.715 & 0.823 \\ \hline
+		\textbf{A,T} & 0.655 & 0.691 & 0.675 & 0.700 &  & 0.664 & 0.788 & 0.783 & 0.887 \\
+		\textbf{A,S} & 0.597 & 0.633 & 0.566 & 0.712 &  & 0.347 & 0.713 & 0.826 & 0.867 \\
+		\textbf{S,D} & 0.613 & 0.680 & 0.551 & 0.580 &  & 0.349 & 0.767 & 0.699 & 0.792 \\
+		\textbf{D,T} & 0.671 & 0.742 & 0.684 & 0.613 &  & 0.630 & 0.803 & 0.715 & 0.823 \\
+		\textbf{S,T} & 0.763 & 0.714 & 0.874 & 0.728 &  & 0.729 & 0.793 & 0.817 & 0.899 \\
+		\textbf{A,D} & 0.373 & 0.591 & 0.302 & 0.522 &  & 0.078 & 0.626 & 0.214 & 0.812 \\ \hline
+		\textbf{A,S,T} & 0.682 & 0.708 & 0.776 & 0.728 &  & 0.718 & 0.808 & 0.817 & 0.959 \\
+		\textbf{A,S,D} & 0.591 & 0.745 & 0.554 & 0.696 &  & 0.337 & 0.765 & 0.699 & 0.922 \\
+		\textbf{A,D,T} & 0.652 & 0.799 & 0.670 & 0.695 &  & 0.603 & 0.808 & 0.715 & 0.934 \\
+		\textbf{S,D,T} & 0.692 & 0.752 & 0.784 & 0.651 &  & 0.708 & 0.811 & 0.807 & 0.940 \\ \hline
+		\textbf{A,S,D,T} & 0.681 & 0.808 & 0.774 & 0.726 &  & 0.702 & 0.833 & 0.807 & 0.974 \\
+	\end{tabular}
+	\end{adjustbox}
+\end{table}
+
+%TODO: Check that these assertions are true once you have new results
+It is interesting to note that the intersection scores for all $m$-tuples are most similar between victim IP 10.0.0.27 and 10.0.0.22. Recall that IP 10.0.0.27 was an HTTP Server while 10.0.0.22 was a MySQL server. Victim IP 10.0.99.143 was also identified as a HTTP Server, however, it's intersection scores are very different from the other three, even the other HTTP server, 10.0.0.27. A possible explanation of this observation is that 10.0.99.143 is on a different subnet and perhaps behind a different firewall, thus requiring different attack tactics. This result points towards latent features of the network topography having a strong influence on the degree to which a GAN can learn to recreate it's data. That is, system function alone is not enough to typify the type of activity it will see when attacked.
+
+Another interesting result of Table \ref{table:inter} is that the intersection of histograms is resilient to earlier score bias. Consider the intersection score of Timestamp (T) on victim IP 10.0.0.100. This feature has the highest score of any single feature, potentially leading to the fallacious expectation that any combination with T will also score high. When moving to testing 2-tuple combinations such as Timestamp (T) + Source IP (S) however the intersection drops significantly.
 
 \section{Alert Dependencies}
-\label{sec:deped}
+\label{sec:depend}
 
 
+
+\subsubsection{An Aside: Confirming Dependency through SVM Separation}
+
+One additional way to confirm the dependencies highlighted through drop in histogram intersection and conditional entropy is to test with a simple model for separation. To do so, a SVM with the RBF Kernel function was trained using all unique permutations of features. The model was given 1 to $n-1$ features as conditioners and an expected output feature for all possible input-output pairs. 
+
+To further prove that the dependencies identified by the GAN exist, a SVM was fit to the same $1|2$-combination histograms discussed in Fig. BLANK. The accuracy of this fit was tabulated for all four victim IP addresses tested in Table \ref{table:svm_accuracy}.
+
+\begin{table}[!htbp]
+	\caption{SVM Prediction Accuracy For 3-Combination Feature Values Assorted Victim IPs}
+	\label{table:svm_accuracy}
+	\centering
+	\begin{tabular}{l|cccc}
+		\multicolumn{1}{l|}{} & \multicolumn{4}{c|}{\textbf{Machine IP Address}} \\
+		\multicolumn{1}{l|}{\textbf{Features = Prediction}} & \multicolumn{1}{l}{\textbf{10.0.0.100}} & \multicolumn{1}{l}{\textbf{10.0.0.27}} & \multicolumn{1}{l}{\textbf{10.0.0.22}} & \multicolumn{1}{l|}{\textbf{10.0.99.143}} \\ \hline
+		\multicolumn{1}{l|}{\textbf{A+T=D}} & \multicolumn{1}{c|}{0.958} & \multicolumn{1}{c|}{0.591} & \multicolumn{1}{c|}{0.949} & \multicolumn{1}{c|}{0.908} \\
+		\multicolumn{1}{l|}{\textbf{A+S=D}} & \multicolumn{1}{c|}{0.962} & \multicolumn{1}{c|}{0.616} & \multicolumn{1}{c|}{0.970} & \multicolumn{1}{c|}{0.977} \\
+		\multicolumn{1}{l|}{\textbf{D+T=A}} & \multicolumn{1}{c|}{0.911} & \multicolumn{1}{c|}{0.490} & \multicolumn{1}{c|}{0.929} & \multicolumn{1}{c|}{0.472} \\
+		\multicolumn{1}{l|}{\textbf{S+D=A}} & \multicolumn{1}{c|}{0.852} & \multicolumn{1}{c|}{0.516} & \multicolumn{1}{c|}{0.889} & \multicolumn{1}{c|}{0.486} \\
+		\multicolumn{1}{l|}{\textbf{S+T=D}} & \multicolumn{1}{c|}{0.790} & \multicolumn{1}{c|}{0.541} & \multicolumn{1}{c|}{0.879} & \multicolumn{1}{c|}{0.794} \\
+		\multicolumn{1}{l|}{\textbf{S+T=A}} & \multicolumn{1}{c|}{0.749} & \multicolumn{1}{c|}{0.440} & \multicolumn{1}{c|}{0.811} & \multicolumn{1}{c|}{0.344} \\
+		\multicolumn{1}{l|}{\textbf{A+T=S}} & \multicolumn{1}{c|}{0.719} & \multicolumn{1}{c|}{0.742} & \multicolumn{1}{c|}{0.539} & \multicolumn{1}{c|}{0.702} \\
+		\multicolumn{1}{l|}{\textbf{D+T=S}} & \multicolumn{1}{c|}{0.736} & \multicolumn{1}{c|}{0.814} & \multicolumn{1}{c|}{0.525} & \multicolumn{1}{c|}{0.729} \\
+		\multicolumn{1}{l|}{\textbf{A+S=T}} & \multicolumn{1}{c|}{0.411} & \multicolumn{1}{c|}{0.387} & \multicolumn{1}{c|}{0.215} & \multicolumn{1}{c|}{0.459} \\
+		\multicolumn{1}{l|}{\textbf{S+D=T}} & \multicolumn{1}{c|}{0.408} & \multicolumn{1}{c|}{0.424} & \multicolumn{1}{c|}{0.161} & \multicolumn{1}{c|}{0.514} \\
+		\multicolumn{1}{l|}{\textbf{A+D=T}} & \multicolumn{1}{c|}{0.178} & \multicolumn{1}{c|}{0.208} & \multicolumn{1}{c|}{0.189} & \multicolumn{1}{c|}{0.436} \\
+		\multicolumn{1}{l|}{\textbf{A+D=S}} & \multicolumn{1}{c|}{0.962} & \multicolumn{1}{c|}{0.616} & \multicolumn{1}{c|}{0.970} & \multicolumn{1}{c|}{0.977}
+	\end{tabular}
+\end{table}
+
+Note that the order of the combinations is the same as that given in Fig. \ref{fig:weighted_conditional_entropy} and held constant for all victim IPs. Though some general trends exist, such as alert signature and destination port category being poor predictors of timestamp, there is variation between the different victims. Fig. \ref{fig:entropy_v_accuracy} shows that regardless of what feature dependencies exist for a given victim there is a strong negative correlation between accuracy of an SVM predictor and the conditional entropy.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=.75\textwidth]{entropy_vs_accuracy.png}
+	\caption{Accuracy of the SVM has a strong negative correlation except for the Alert Signature and Destination Port predicting Source IP. This is seen across the board \vspace*{-10pt}}
+	\label{fig:entropy_v_accuracy}
+\end{figure}
 
 \section{Output Modes Captured}
 \label{sec:output}

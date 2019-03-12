@@ -5,6 +5,17 @@ The usage of alert data with Machine Learning algorithms suffers from two issues
 
 To address these challenges this section will cover the unique preprocessing applied to NIDS data collected from Suricata. Specifically, the features of alert signature, destination port, timestamp, and source IP will be considered. Additionally, intuitive metrics for analyzing alert fidelity are introduced as an inclusive system to address how realisitc generated alerts are compared to their source alerts from the ground truth dataset. 
 
+\section{Network Intrusion Detection System Alerts Structure}
+
+The structure of NIDS alerts can be seen graphically in Fig. \ref{fig:alert}. Note that this graphic does not display all the fields potentially in an alert. Some fields aren't always filled out. Some fields are deterministic from our experiements. 
+
+\begin{figure}
+	\centering
+	\label{fig:alert}
+	\includegraphics[width=\textwidth]{alert_struct}
+	\caption{Sample Suricata Alert}
+\end{figure}
+
 \section{Cyber Alert Data Preprocessing}
 
 
