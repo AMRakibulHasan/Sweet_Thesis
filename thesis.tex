@@ -13,16 +13,14 @@
 % *   Definitely include figure with all the features of alerts
 % * See Picture for Jay's recommended format of presentation
 
-% *
-% *
-% *
-% *
-% *
-% *
-% *
-% *
-% *
-% *
+% * JSD Table
+% * Table 5.3 Title: Histogram Intersection Scores Across 4 Target IPs
+% * Table 5.3 Data
+% * Fig 5.9 Values for WGAN-GP
+%     * Replicate for all IPs, both models 
+% * Table 5.4 and 5.5 Values for WGAN-GP
+% * Output Mode Capture Table
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \begin{document type}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,6 +74,8 @@
 %  - xindy: Sorting / indexing of items
 \usepackage[nopostdot,nonumberlist,acronym,toc,xindy]{glossaries}
 
+\usepackage[toc,page]{appendix}
+
 % Support for displaying pseudo-code
 \usepackage{algorithm}
 
@@ -91,6 +91,7 @@
 \usepackage{verbatim}
 \usepackage{enumerate}
 \usepackage{adjustbox}
+\usepackage{multirow}
 
 % \end{packages}
 
@@ -110,6 +111,9 @@
 
 % Equation referencing
 \newcommand{\eq}[1]{(\ref{#1})}
+
+% Talk about conditionals in plaintext
+\newcommand{\given}{$|$}
 
 % Algorithm referencing
 \newcommand{\alg}[1]{Algorithm~\ref{#1}}
