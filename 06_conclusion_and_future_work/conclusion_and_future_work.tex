@@ -1,32 +1,35 @@
-% background.tex
-%
-% Author       : James Mnatzaganian
-% Contact      : http://techtorials.me
-% Date Created : 08/27/15
-%
-% Description  : Background chapter used by "thesis.tex".
-%
-% Copyright (c) 2015 James Mnatzaganian
-
 \chapter{Conclusions and Future Work}
 
 \section{Conclusion}
 
+This work shows the potential for using Generative Adversarial Networks as a means to generate artificial network intrusion detection alerts. Given the stochastic nature of alerts, rarity of known malicious samples, and rapidly growing need for alert data to train Machine Learning algorithms, GANs provide a means to create alerts that traditional statistic models cannot compare to.  
+
+Additionally, two intuitive metrics are defined for analyzing alert generation fidelity; histogram intersection and Jensen Shannon Divergence. Direct visualization of the histogram intersection illustrates the model's output distribution across m-tuple combinations of features, showing the intricacy of learning to output realistic alert data. Jensen Shannon Divergence is employed to confirm relationships identified by histogram intersection and highlight crucial differences in the probability distribution of the generative model.
+
+Using these metrics and information theoretic calculations, feature dependencies are revealed and examined to provide a deeper understanding of both the power and shortcomings of GANs applied to NIDS alert generation. Joint entropy is computed for the ground truth distribution and used as a baseline score identifying the challenge of modeling the data distribution. Then conditional entropy is employed on both the ground truth and generated data distributions to identify feature dependencies and how well the generative network models these dependencies. In order to view low level feature-value dependencies, conditional probability tables are generated and highlighted to show sparsity and determinism. 
+
+Finally, it is shown that using mutual information is an effective means of regularizing the generator network, improving exploration of the ground truth feature space. Not only do the metrics measuring alert fidelity improve, but output mode collapse is shown to decrease. This is a direct result of the generator more closely modeling the ground truth data distribution. 
+
 \section{Future Work}
 
+Though this work shows the promise of GANs in NIDS alert generation the results are far from perfect. Modeling the distribution of alerts is still a monumental challenge for several reasons: The lack of known malicious alert data makes it challenging to train GANs. Current Machine Learning methods in the field of Cyber Security use sequences of alerts in order to model temporal relationships in an attack sequences. And the quality of results requires improvement before being ready for application to other Cyber Security Machine Learning systems.
+
 \subsection{Multi-Alert Generation and Analysis}
+
+Altering the models presented by this work to generating multiple temporally related alerts at once would greatly increase the utility of generator outputs. Current works applying Machine Learning methods to Cyber Security problems almost exclusively use Recurrent Neural Network structures for attack classification and prediction. It is well established that cyber attacks have intricate behavioral patterns consisting of multiple actions; several alerts may be all related to a single goal or exploit used by the attacker. Modifying the models presented to output chains of alerts would allow for inspection of attacker behaviors and long term strategies. 
+
+Two means of modifying these models are presented. First, each of the neural networks presented could be modified to use a Recurrent Neural Network structure. Particularly, Long Short Term Memory cells have been effective at learning complex temporal relationships and can adaptively select when to forget prior information. In order to train a model consisting of LSTM Neural Networks, the ground truth data would have to be segmented into contiguous chains of alerts. Additionally, alert chain generation would have be cut manually, as there is no natural concept of what type of alert marks the end of a chain (whereas in other tasks like sentence generation a period represents the end). 
+
+The second modification to network structure would be to implement Convolutional Neural Networks for each model. In order to make this network structure work, packets would have to be structured into 2D arrays consisting of contiguous alerts. One example of this would be for each packet to have the prior 2 packets preprended to the alert and the subsequent 2 packets appended. This would create an $2N+1$ x $M$ array where $2N+1$ is the number of alerts considered in each input to the network and M is the number of features given by each alert. This network would also have the drawback of being a fixed size input and output. 
+
+Regardless of the means used to generate chains of alerts, new analysis options are immediately available when considering alert sequences. Sequences of alerts could be modeled as Markov Chains allowing for longest common subsequence to be identified and direct comparison of state transition probabilities. This allows for a rich understanding of the temporal performance of the GAN and how it's results differ from ground truth sequences. Additionally alert sequences could be viewed as a graph allowing for visualization of alerts with low connectivity/deterministic attack behavior, and feature value changes over time. 
+
 
 \subsection{Improving Generation through Reinforcement Learning}
 
 Methods of establishing generator loss in a generative adversarial networks fail to capture discrete features which have interdependencies. This work proposes a way to model generator loss as a game and apply a reinforcement learning inspired solution to it. 
 
-Consider the generator to be an agent, whose action space is comprised of all the potential output features it may generate. Then, consider the following  hierarchical reward scheme: For each feature that is output correctly reward the generator with $2^1$ 'points'. For each pair of features reward the generator with $2^2$ 'points'. And so on and so forth where the maximal reward is $2^n$ 'points'. The n-many tuple that is correct can be considered the order of the output (e.g.) The above examples would be first order, second order, and finally n-th order. This can be established as a sum of the correct combinations as follows:
-
-{
-	\centering
-	Given A is the action space consisting of all unique features in the dataset\\
-	and s is a sample action generated by the neural network drawn from A\\
-}
+Consider the generator to be an agent, whose action space is comprised of all the potential output features it may generate. Then, consider the following  hierarchical reward scheme: For each feature that is output correctly reward the generator with $2^1$ 'points'. For each pair of features reward the generator with $2^2$ 'points'. And so on and so forth where the maximal reward is $2^n$ 'points'. The n-many tuple that is correct can be considered the order of the output (e.g.) The above examples would be first order, second order, and finally n-th order. This can be established as a sum of the correct combinations as follows: Given A is the action space consisting of all unique features in the dataset	and s is a sample action generated by the neural network drawn from A.
 
 \begin{equation}
 L = \sum_{k=1}^{n}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} 2^k
@@ -49,13 +52,7 @@ Another benefit of formulating loss in this manner is that it allows for easy ex
 	\item The loss may be modeled as a n-th order Markov Source to capture temporal structure within the data. 
 \end{enumerate}
 
-The probability mass function for cyberattack data does not follow any conventional distribution (Normal, Poisson, Uniform, etc), nor does it account for all possible features in the 'Alert Space' [Explain this]. In order to account for this in the loss function each feature predicted that is in the Alert Space would have a weighted reward value by the probability of that feature value occuring as shown below:
-
-{
-	\centering
-	Let F be a subset of features from the Alert Space A\\
-	$F_v$ represents a specific value for the Feature f.\\
-}
+The probability mass function for cyberattack data does not follow any conventional distribution (Normal, Poisson, Uniform, etc), nor does it account for all possible features in the 'Alert Space' [Explain this]. In order to account for this in the loss function each feature predicted that is in the Alert Space would have a weighted reward value by the probability of that feature value occurring as shown below: Let F be a subset of features from the Alert Space A and $F_v$ represents a specific value for the Feature f
 \begin{gather}
 p_{v_n} = {|F_{v_n}| \over |F_n|}\\
 L = \sum_{k=1}^{n}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} (2^k)p(v_1)

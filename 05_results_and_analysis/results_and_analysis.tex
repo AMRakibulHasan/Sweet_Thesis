@@ -242,7 +242,7 @@ Given the scale of the combinations tested a simple 3 step heuristic was defined
 
 This system reduced the search of possible combinations, and allowed for quick visual identification of values which performed well. Identifying the highest intersection score per feature combination is not sufficient criteria to identify the best hyperparameter combination as scores are very close and can be noisy. Adding in the $90^{th}$ constraint helps to identify other candidates with high performing intersection scores. Finally, the $80^{th}$ percentile constraint is meant to act as a lower bound as values which fall within in it are still good, and values which are not highlighted at all should raise questions about model performance. For example, if the individual feature intersections are within the $90^{th}$ percentile but 3-tuple and 4-tuple combinations are completely not highlighted, the model may have failed to capture high order dependencies in the distribution of the data. Thus, that parameter setting should not be considered for use in future experiments.
 
-A subsection of the highlighted table for the WGAN-GP model is given in Fig. \ref{fig:highlighted_param_wgan}. Note that the row with the red arrow pointing to it performs well, as 6 of it's 15 values are the highest performing intersection scores with an additional 6 in the $90^{th}$ percentile.
+A subsection of the highlighted table for the WGAN-GP model is given in Fig. \ref{fig:highlighted_param_wgan}. Note that the row with the red arrow pointing to it performs well.
 
 \begin{figure}[!htbp]
 	\centering
