@@ -48,7 +48,7 @@ Since the goal of this work was to create individual NIDS alerts without tempora
 
 The generator consisted of 2 layers. The first layer sampled from noise space $\mathbb{Z}$ to a hidden representation. The next layer was directly responsible for each feature's output value. This layer consisted of four individual mappings from the hidden representation to an output layer with cardinality equal to the number of unique values per feature. Finally, a concatenation was used to take the prior 4 outputs and create a full 1-hot encoded alert. 
 
-The discriminator also consisted of 2 layers. The first layer took 1-hot encoded alerts as input and mapped them to a hidden representation. The next layer mapped this hidden representation to a scalar value representing the probability that the alert was from the ground truth dataset. A graphical model is included in Fig. \ref{fig:model_simple}. 		Inputs to the network are highlighted in yellow. Learnable weight layers are in blue. The concatenation in orange is a non-backpropable layer used only to prepare generator output for input to the discriminator. The red boxes and lines represent the model loss functions and back-propagation.
+The discriminator also consisted of 2 layers. The first layer took 1-hot encoded alerts as input and mapped them to a hidden representation. The next layer mapped this hidden representation to a scalar value representing the probability that the alert was from the ground truth dataset. A graphical model is included in Fig. \ref{fig:model_simple}. Inputs to the network are highlighted in yellow. Learnable weight layers are in blue. The concatenation in orange is a non-backpropable layer used only to prepare generator output for input to the discriminator. The red boxes and lines represent the model loss functions and back-propagation.
 
 \begin{figure}[!htbp]
 	\centering%
@@ -62,8 +62,8 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 
 \begin{table}[!htbp]
 	\centering
-	\label{tab:model_simple_a}
 	\caption{Generator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\label{tab:model_simple_a}
 	\begin{tabular}{l|l|l}
 		\hline
 		\multicolumn{3}{c}{\textbf{Generator}} \\ 
@@ -81,8 +81,8 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 
 \begin{table}[!htbp]
 	\centering
-	\label{tab:model_simple_b}
 	\caption{Discriminator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\label{tab:model_simple_b}
 	\begin{tabular}{l|l|l}
 		\hline
 		\multicolumn{3}{c}{\textbf{Discriminator}} \\ 
@@ -103,8 +103,8 @@ A feed forward neural network was implemented to learn the mutual information be
 
 \begin{table}[!htbp]
 	\centering
-	\label{tab:model_mi}
 	\caption{Mutual Information Estimator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
+	\label{tab:model_mi}
 	\begin{tabular}{l|l|l}
 		\hline
 		\multicolumn{3}{c}{\textbf{Estimator}} \\ 
