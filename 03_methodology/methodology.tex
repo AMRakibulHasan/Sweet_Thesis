@@ -139,42 +139,4 @@ Since mutual information is theoretically unbounded, gradient updates resulting 
 
 Training GANs is a notoriously tricky task as loss score is not a fair representation of whether the model has converged to generating realistic data. Like many traditional Deep Learning models, hyperparameter tuning is critical to model performance for GANs. This creates a challenge while training GANs, especially with unconventional datasets where metrics like Inception Score cannot be applied. In order to address this and exhaustive hyperparameter search for each of the GAN models above was carried out. First, individual parameters were tuned in order to find candidate values. Then, these candidate values were used in a search of all possible parameter combinations.
 
-Using the histogram intersection metric proposed in Section \ref{sec:anal} across all combinations of features, the hyperparameter setting which achieved the most intersection scores in the $90^{th}$ percentile were selected as optimal. More details about the result of this search will be covered in Section \ref{sec:rna}. Table \ref{tab:params} shows the optimal hyperparameter values for each model.
-
-\begin{table}[!htb]
-	\centering
-	\caption{Optimal Hyperparameter Settings}
-	\label{tab:params}
-	\begin{subtable}{.5\linewidth}
-		\centering
-		\caption{}
-		\begin{tabular}{l|l}
-			\hline
-			\multicolumn{2}{c}{\textbf{WGAN-GP}} \\ 
-			\hline
-			Epochs & 180 \\
-			Batch Size & 100 \\
-			Learning Rate & 1e-5 \\
-			Lambda & 0.1 \\
-			Beta 1 & 0.5 \\
-			Beta 2 & 0.9 \\
-			Hidden Dimension & 128                  
-		\end{tabular}
-	\end{subtable}%
-	\begin{subtable}{.5\linewidth}
-		\centering
-		\caption{}
-		\begin{tabular}{l|l}
-			\hline
-			\multicolumn{2}{c}{\textbf{ WGAN-GPMI}} \\ 
-			\hline
-			Epochs & 250 \\
-			Batch Size & 100 \\
-			Learning Rate & 5e-4 \\
-			Lambda & 0.4 \\
-			Beta 1 & 0.5 \\
-			Beta 2 & 0.8 \\
-			Hidden Dimension & 128                  
-		\end{tabular}
-	\end{subtable}%	
-\end{table}
+Using the histogram intersection metric proposed in Section \ref{sec:anal} across all combinations of features, the hyperparameter setting which achieved the most intersection scores in the $90^{th}$ percentile were selected as optimal. More details about the result of this search will be covered in Section \ref{sec:rna}.
