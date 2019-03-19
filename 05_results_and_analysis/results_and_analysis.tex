@@ -8,11 +8,13 @@ Each of the GAN models described in Section \ref{sec:model_arch} were used to cr
 \begin{enumerate}
 	\item Thorough Hyperparameter Search - Individual hyperparameters were tuned for each model to see their impact on histogram intersection. Top candidate values were selected for a full hyperparameter search where all combinations of hyperparameter values. The results are presented for both WGAN-GP and the improved WGAN-GPMI.
 
-	\item Alert Fidelity - A subset of target IPs from both the CPTC'17 and CPTC'18 dataset were used for training WGAN-GP and WGAN-GPMI models. The results of these models were analyzed and visualized using histogram intersection and Jensen-Shannon Divergence.
+	\item Alert Fidelity - A subset of target IPs from the CPTC'17 dataset were used for training WGAN-GP and WGAN-GPMI models. The results of these models were analyzed and visualized using histogram intersection and Jensen-Shannon Divergence.
 
 	\item Alert Dependency - For the same subset of target IPs alert dependencies were identified by using drop in histogram intersection, entropy computation, and conditional probability tables.
 
 	\item Output Modes Captured - The number of output modes captured by the model is comprised of two components. How many of the true output modes are output by the model. And how many output modes by the model do not occur in the ground truth.
+	
+	\item Generality of Models - To show the ability of these models to perform on a variety of datasets we introduce the CPTC'18 dataset. Histogram Intersection and Jensen Shannon Divergence are used to measure the performance of each model when trained on a new dataset. 
 
 \end{enumerate}
 
@@ -630,3 +632,8 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
+
+\section{Generality of Models}
+\label{sec:cptc18}
+
+One of the most powerful characteristics of Machine Learning models is their ability to adapt well to new datasets from the same domain of study. To ensure that the models presented here maintain generality we retrain each on the CPTC'18 dataset. This dataset continues to make use of Suricata alerts, however features different feature values and is based off an attack on a completely new network architecture. 
