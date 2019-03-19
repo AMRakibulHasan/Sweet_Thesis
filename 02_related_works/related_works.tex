@@ -53,7 +53,20 @@ Note that in the above $\lambda$ is a tunable hyperparameter determing the influ
 	\label{eq:MINE}
 \end{equation}
 
-Separate from the advances of WGAN and WGAN-GP, Mutual Information Neural Estimation (MINE) \cite{Belghazi2018} was introduced as a means to help palliate output mode dropping and improve reconstruction of generative models. MINE uses a neural network optimized using the Donsker-Varadhan representation of the KL-Divergence, given in (\ref{eq:MINE}), to estimate the mutual information $I$ between two distributions. COPY PASTE EXPLANATION WITH VARS HERE. THEN COPY PASTE GPMI EXPLANATION.
+Separate from the advances of WGAN and WGAN-GP, Mutual Information Neural Estimation (MINE) \cite{Belghazi2018} was introduced as a means to help palliate output mode dropping and improve reconstruction of generative models. MINE uses a neural network optimized using the Donsker-Varadhan representation of the KL-Divergence, given in (\ref{eq:MINE}), to estimate the mutual information $I$ between two distributions. 
+
+Similar to the Earthmover Distance, the KL Divergence is a metric that quantifies the distance between two arbitrary distributions, P and Q. However, the KL divergence makes use of the logarithm to express this distance in units of nats or bits. In the DV representation given in (\ref{eq:MINE}) T is the family of transformations that maps the input features $\Omega$ to $\Reals$. Thus  $\E_\P[T]$ and $\E_\Q[e^T]$ are the distributions whose divergence is being measured by a neural network learning transformations $T$. 
+
+In order to palliate mode dropping by the generator, Belghazi \etal \cite{Belghazi2018} propose to regularize the generator by the negative-entropy of it's output distribution. Since this is often intractable for real world samples the mutual information between the sampled noise and output samples can be used as a proxy.
+
+The Mutual Information estimate is then added to the generator's loss defined in (\ref{eq:WGAN-GP3}), resulting in the formulation given by (\ref{eq:g_loss_new}).
+
+\begin{equation}
+G_{loss} =  -\E_{\widetilde{x} \sim \P_g}[D(\widetilde{x})] + D_{KL}(\widehat{x}||\P_g)
+\label{eq:g_loss_new}
+\end{equation}
+
+
 
 \section{Applications of Generative Adversarial Networks to Network Traffic: Adversarial Sample Crafting}
 
