@@ -3,7 +3,7 @@
 
 % TODO: Include mention that this spans across 17 and 18 data.
 
-Each of the GAN models described in Section \ref{sec:model_arch} were used to create artificial NIDS alert data.  Using the methods described in Section \ref{sec:meth} the fidelity of the learned model was analyzed. This analysis can be broken down into the following sections:
+Each of the GAN models described in Section \ref{sec:model_arch} were used to create artificial NIDS alert data.  Using the methods described in Section \ref{sec:anal} the fidelity of the learned model was analyzed. This analysis can be broken down into the following sections:
 
 \begin{enumerate}
 	\item Thorough Hyperparameter Search - Individual hyperparameters were tuned for each model to see their impact on histogram intersection. Top candidate values were selected for a full hyperparameter search where all combinations of hyperparameter values. The results are presented for both WGAN-GP and the improved WGAN-GPMI.
@@ -575,7 +575,7 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 	\label{tab:output_modes}
 	\begin{adjustbox}{angle=90}
 		\begin{tabular}{ccccccccc}
-			\multicolumn{1}{c|}{} & \multicolumn{4}{l|}{\textbf{Target IP Address (WGAN-GP)}} & \multicolumn{4}{c}{\textbf{Target IP Address (WGAN-GPMI)}} \\ \hline
+			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{Target IP Address (WGAN-GP)}} & \multicolumn{4}{c}{\textbf{Target IP Address (WGAN-GPMI)}} \\ \hline
 			\multicolumn{1}{c|}{\textbf{M}} & \multicolumn{1}{l|}{\textbf{10.0.0.100}} & \multicolumn{1}{l|}{\textbf{10.0.0.27}} & \multicolumn{1}{l|}{\textbf{10.0.0.22}} & \multicolumn{1}{l|}{\textbf{10.0.99.143}} & \multicolumn{1}{l|}{\textbf{10.0.0.100}} & \multicolumn{1}{l|}{\textbf{10.0.0.27}} & \multicolumn{1}{l|}{\textbf{10.0.0.22}} & \multicolumn{1}{l}{\textbf{10.0.99.143}} \\ \hline
 			\multicolumn{1}{c|}{\textbf{4}} & \multicolumn{1}{c|}{21} & \multicolumn{1}{c|}{15} & \multicolumn{1}{c|}{9} & \multicolumn{1}{c|}{10} & \multicolumn{1}{c|}{10} & \multicolumn{1}{c|}{14} & \multicolumn{1}{c|}{4} & 8 \\ \hline
 			\multicolumn{1}{c|}{\multirow{4}{*}{\textbf{3}}} & \multicolumn{1}{c|}{14} & \multicolumn{1}{c|}{11} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{9} & \multicolumn{1}{c|}{13} & \multicolumn{1}{c|}{3} & 8 \\
@@ -605,7 +605,7 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 	\label{tab:random_outputs}
 	\begin{adjustbox}{angle=90}
 		\begin{tabular}{c|c|c|c|c|c|c|c|c}
-			\multicolumn{1}{c|}{} & \multicolumn{4}{l|}{\textbf{Target IP Address (WGAN-GP)}} & \multicolumn{4}{c}{\textbf{Target IP Address (WGAN-GPMI)}} \\ \hline
+			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{Target IP Address (WGAN-GP)}} & \multicolumn{4}{c}{\textbf{Target IP Address (WGAN-GPMI)}} \\ \hline
 
 			\textbf{M} & \multicolumn{1}{l|}{\textbf{10.0.0.100}} & \multicolumn{1}{l|}{\textbf{10.0.0.27}} & \multicolumn{1}{l|}{\textbf{10.0.0.22}} & \multicolumn{1}{l|}{\textbf{10.0.99.143}} & \multicolumn{1}{l|}{\textbf{10.0.0.100}} & \multicolumn{1}{l|}{\textbf{10.0.0.27}} & \multicolumn{1}{l|}{\textbf{10.0.0.22}} & \multicolumn{1}{l}{\textbf{10.0.99.143}} \\
 			\hline
