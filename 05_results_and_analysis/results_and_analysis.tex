@@ -274,7 +274,7 @@ A subsection of the highlighted table for the WGAN-GPMI model is given in Fig. \
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=\textheight,height=\textwidth,angle=90]{gpmi_full_param_search}
+	\includegraphics[width=\textheight,height=.85\textwidth,angle=90]{gpmi_full_param_search}
 	\caption{
 		Subsection of WGAN-GPMI Hyperparameter Search Results
 	}
@@ -411,11 +411,11 @@ One of the largest benefits of the Jensen Shannon Divergence is that it imposes 
 \section{Alert Dependencies}
 \label{sec:depend}
 
-Interactions between NIDS alert features provide important contextual information about cyber attacks. For example, knowing what machine an attack will occur on can reduce the number of possible attack vectors on that machine. Capturing these feature dependencies is a key aspect of understanding the quality of the generative model. To verify these dependencies the drop in histogram intersection is noted, weighted conditional entropy is computed according to the equations provided by (\ref{eq:wce}) and (\ref{eq:norm_wce}), and joint entropy is computed using (\ref{eq:je}) and (\ref{eq:norm_je}) to provide a baseline. Conditional probability tables are generated to provide detailed inspection of specific feature value relationships. Appendix \ref{sec:svm_app} contains an alternative method to verifying feature dependency through the usage of a Support Vector Machine. These metrics were all computed twice, once for each model.
+Interactions between NIDS alert features provide important contextual information about cyber attacks. For example, knowing what machine an attack will occur on can reduce the number of possible attack vectors on that machine. Capturing these feature dependencies is a key aspect of understanding the quality of the generative model. To verify these dependencies the drop in histogram intersection is noted, weighted conditional entropy is computed according to the equations provided by (\ref{eq:wce}) and (\ref{eq:norm_wce}), and joint entropy is computed using (\ref{eq:je}) and (\ref{eq:norm_je}) to provide a baseline. Conditional probability tables are also generated to provide detailed inspection of specific feature value relationships. Appendix \ref{sec:svm_app} contains an alternative method to verifying feature dependency through the usage of a Support Vector Machine. These metrics were all computed for both WGAN-GP and WGAN-GPMI models. 
 
 \subsection{WGAN-GP Feature Dependency Performance}
 
-By viewing the difference in histogram intersection between $m\pm1$ tuples feature dependencies can be inferred. Large drops indicate a low amount of dependence between the lower levels of feature combinations and the higher level. Small drops when adding a new feature to the joint distribution indicate that there is dependence between the lower level combination and the newly added feature. By applying the graph structure given in Fig. \ref{fig:metric_graph} to NIDS alerts, histogram intersection scores can be noted in nodes of the graph while edges represent conditional and joint entropy. Fig. \ref{fig:alert_depend_1} shows the dependency graph for Target IP 10.0.0.100 from the CPTC'17 dataset. These graphs were constructed for the other three target IPs tested from CPTC '17 and are included in the Appendix \ref{sec:depend_app}
+By viewing the difference in histogram intersection between $m\pm1$ tuples, feature dependencies can be inferred. Large drops indicate a low amount of dependence between the lower levels of feature combinations and the higher level. Small drops when adding a new feature to the joint distribution indicate that there is dependence between the lower level combination and the newly added feature. By applying the graph structure given in Fig. \ref{fig:metric_graph} to NIDS alerts, histogram intersection scores can be noted in nodes of the graph while edges represent conditional and joint entropy. Fig. \ref{fig:alert_depend_1} shows the dependency graph for Target IP 10.0.0.27 from the CPTC'17 dataset. These graphs were constructed for the other three target IPs tested from CPTC '17 and are included in the Appendix \ref{sec:depend_app}
 
 \begin{figure}[!htbp]
 	\centering
@@ -432,7 +432,7 @@ It is important to note that for the 2-tuple combinations there are actually 6 p
 
 In order to highlight drops in intersection score, the following schema was applied to the graph: Lines are color coded such that blue lines indicate feature unions which result in less than 5\% difference between histogram scores. Conversely, lines which are red indicate an difference that is greater than 5\%. Lines which are purple indicate a unidirectional dependence relationship between the feature tuples. This occurs when one feature is a good predictor of another ($<$ 5\% intersection difference) but the opposite is not true ($>$ 5\% intersection difference). Lines which are blue or red exhibit bidirectional dependence; both lines exhibit the same intersection difference. All dashed lines are bounding boxes added to clearly segment the varying $m$-tuple histograms.
 
-To verify that the graph correctly highlights feature dependencies Table \ref{tab:ce} was computed. This table considers all unique permutations of features for all m-tuple sizes across all 4 target IPs. The conditional entropy is then compared between the ground truth and generated data distributions. Additionally, the joint entropy was computed in Table \ref{tab:je} to provide a baselines representation of the amount of randomness in the feature distributions. This table contains calculations only from 2-tuple, 3-tuple, and 4-tuple combinations as there is no direct comparison to draw between conditional and joint entropy for single feature histograms.
+To verify that the graph correctly highlights feature dependencies Table \ref{tab:ce} was computed. This table considers all unique permutations of features for all m-tuples across all 4 target IPs. The conditional entropy is then compared between the ground truth and generated data distributions. Additionally, the joint entropy was computed in Table \ref{tab:je} to provide a baseline representation of the amount of randomness in the feature distributions. This table contains calculations only from 2-tuple, 3-tuple, and 4-tuple combinations as there is no direct comparison to draw between conditional and joint entropy for single feature histograms.
 
 
 \begin{table}[!htbp]
@@ -500,19 +500,16 @@ To verify that the graph correctly highlights feature dependencies Table \ref{ta
 	\end{adjustbox}
 \end{table}
 
-Several instances of feature dependency show good agreement between Fig. \ref{fig:alert_depend_1} and Table \ref{tab:ce}. To draw this conclusion it is important to consider that the conditional entropy of the generated data and ground truth distribution are similar and low in magnitude.
+Several instances of feature dependency show good agreement between Fig. \ref{fig:alert_depend_1} and Table \ref{tab:ce}. For example, the drop in interesection score between A,S and A,S,T is low and the conditional entropy of the ground truth distribution T{\given}A,S is low. 
 
-To further study specific feature-value relationships between the ground truth and generated data distributions complete probability tables may be output for each feature permutation. In order to make this tables human-readable the following color schema is applied: cells which have probability 0 are highlighted in red; cells with probability 1 are highlighted in green. This two step process highlights both the sparsity of output probabilities as well as cases where the input results in a deterministic output.
-
-Further exploring the feature dependency agreement between X and Y, the conditional probability tables for both the ground truth and generated distribution are reviewed. Fig. \ref{fig:feat_depend_tab} shows some of the specific feature values that results in the conditional entropy values noted. Note that the output value Y is very deterministic once a specific input X is given.
-
-
+To further study specific feature-value relationships between the ground truth and generated data distributions conditional probability tables may be output for each feature permutation. In order to make these tables human-readable the following color schema is applied: cells which have probability 0 are highlighted in red; cells with probability 1 are highlighted in green. This two step process highlights both the sparsity of output probabilities as well as cases where the input results in a deterministic output. Specific examples of these tables for the ground truth distribution, WGAN-GP generated distribution, and WGAN-GPMI generated distribution will be covered in \ref{sec:gpmi_dep}
 
 \subsection{WGAN-GPMI Feature Dependency Performance}
+\label{sec:gpmi_dep}
 
 All of the aforementioned plots and tables were created in duplicate in order to test the effect of Mutual Information maximization on the model's ability to capture feature dependencies.
 
-First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was applied to the histogram intersection scores of the WGAN-GPMI model in Fig. \ref{fig:alert_depend_5}. Similar to the WGAN-GP model results, Appendix \ref{sec:depend_app} contains the results for the other three target IP addresses tested. Note that from this figure alone it is impossible to make a claim that feature dependencies are more fully captured by the WGAN-GPMI model. However by computing the conditional entropy in Table \ref{tab:ce2} it is apparent that the WGAN-GPMI model more closely imitates the entropy of the ground truth.
+First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was applied to the histogram intersection scores of the WGAN-GPMI model in Fig. \ref{fig:alert_depend_5}. Similar to the WGAN-GP model results, Appendix \ref{sec:depend_app} contains the results for the other three target IP addresses tested. Note that from this figure alone it is impossible to make a claim that feature dependencies are more fully captured by the WGAN-GPMI model. However by computing the conditional entropy in Table \ref{tab:ce2} it is apparent that the WGAN-GPMI model more closely imitates the entropy of the ground truth. In fact, several of the small valued m-tuples such as A{\given}T, T{\given}D, and D{\given}S,T all have identical conditional entropy values to the ground truth distribution.
 
 \begin{figure}[!htbp]
 	\centering
@@ -539,7 +536,7 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 			\multicolumn{1}{l|}{\textbf{S{\given}A}} & 0.800 & 0.752 & 0.831 & 0.711 &  & 0.229	&	0.239	&	0.526	&	0.222 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}S}} & 0.346 & 0.445 & 0.253 & 0.278 &  & 0.509	&	0.385	&	0.207	&	0.558 \\
 			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & 0.222 & 0.070 & 0.288 &  & 0.149	&	0.026	&	0.007	&	0.097 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}D}} & 0.479 & 0.346 & 0.655 & 0.383 &  & 0.479	&	0.346	&	0.655	&	0.384 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}D}} & 0.479 & 0.346 & 0.655 & 0.383 &  & 0.479	&	0.346	&	0.655	&	0.383 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}T}} & 0.287 & 0.234 & 0.152 & 0.379 &  & 0.287	&	0.234	&	0.152	&	0.379 \\
 			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & 0.385 & 0.271 & 0.475 &  & 0.403	&	0.376	&	0.214	&	0.543 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}D}} & 0.822 & 0.779 & 0.856 & 0.785 &  & 0.436	&	0.260	&	0.474	&	0.301 \\
@@ -588,6 +585,18 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 	\end{adjustbox}
 \end{table}
 
+Despite identical conditional entropy values existing between the ground truth and generated distribution it is important to note that this does not guarantee that the distributions are identical. Fundamentally, two different distributions can have the same entropy. Additionally, the conditional entropy calculation used is weighted by the probability that a given input conditioning value occurs. This allows inputs that occur frequently to have more influence over the conditional entropy value than inputs that occur rarely. Given a very small chance of an input occuring it's contribution to the conditional entropy calculation could become negligible. In order to better understand each model, the conditional probability tables showing inputs and their respective output probability were generated. Figure \ref{fig:make_this} shows subsections of the conditional probability table's from the ground truth, WGAN-GP generated, and WGAN-GPMI generated distributions. 
+
+% TODO Add figure
+
+The figure shows the conditional probability table for A{\given}D,T. All of the tables are formatted such that the input feature combination is given in the first column, the probability of that input occurring is given by the second column, the third column indicates the number of times that input occurred, and the remaining columns indicate the output values and their probability of occurring. This allows for identification of the influence each input combination would have on the conditional probability calculation.
+
+Note that the ground truth distribution exhibits deterministic behavior for many of the input feature combinations. Capturing these cases of deterministic behavior is especially important for inputs which occur frequently. For example, the successfully learning the dependency between X and Y predicting the value of Z is important to model accuracy. The WGAN-GP generated distribution fails to do this, while the WGAN-GPMI distribution performs far better. 
+
+Another interesting observation from these probability tables is that sometimes only a subset of the input conditioning values affects the output value. For example, if the given Destination Service value is (VALUE) then the output Alert Signature is (VALUE) regardless of the Time Bin value. Additionally, the table highlights that (VALUE) only occurs in Time Bin (VALUES).
+
+Finally, several input combination instances that occur in the ground truth distribution never occur in the WGAN-GP generated distribution. These include (INPUTS). This is referred to as mode dropping and covered more in depth in Section \ref{sec:output}.
+
 % TODO Output raw counts for conditional entropy tables
 % Can some of the incorrect output signature ever occur from the inputs given
 % Show ratio of incorrect modes over correct modes rather than number of combinations
@@ -595,9 +604,7 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 
 \section{Output Modes Captured}
 \label{sec:output}
-Finally, to assess output modes captured by each model, two values were collected; the number of values that existed in the ground truth that were not generated by the model and the number of values generated by the model that never occurred in the ground truth. Like all previous metrics, these values were collected for each unique m-tuple combination of features. Table \ref{tab:output_modes} shows the number of output modes missed by the generative model. Note that this table shows the direct benefit of mutual information maximization, as the number of output modes missed by the model decreases across the board for the WGAN-GPMI model.
-
-Table \ref{tab:random_outputs} shows the number of noisy outputs by the generative model  that did not occur in the ground truth. These results are less clear cut. For target IP 10.0.99.143, the target IP tested with the lowest number of alerts, the WGAN-GPMI model appears to create less noisy outputs. However, for other IPs such as 10.0.0.100, the models perform comparably.
+Finally, to assess output modes captured by each model, two values were collected; the number of values that existed in the ground truth that were not generated by the model and the number of values generated by the model that never occurred in the ground truth. Like all previous metrics, these values were collected for each unique m-tuple combination of features. Table \ref{tab:output_modes} shows the number of output modes missed by the generative model. The bottom two rows identify the number of unique output modes consisting of all 4 features for each target IP and the percentage of modes dropped.  Note that this table shows the direct benefit of mutual information maximization, as the number of output modes missed by the model decreases across the board for the WGAN-GPMI model. Some of the target IP addresses recover more modes than other when moving to the WGAN-GPMI model; 10.0.0.100, as well as 10.0.0.22,  halve the number of output modes dropped.
 
 
 \begin{table}[!htbp]
@@ -629,6 +636,7 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 	\end{adjustbox}
 \end{table}
 
+Table \ref{tab:random_outputs} shows the number of noisy outputs by the generative model that did not occur in the ground truth. The bottom two rows of this table shows the number of unique modes and the ratio of noisy 4-tuple samples over the number of true combinations.  For target IP 10.0.99.143, the target IP tested with the lowest number of alerts, the WGAN-GPMI model appears to create less noisy outputs. Additionally 10.0.0.27 also sees a significant drop in the number of noisy outputs generated when using the WGAN-GPMI model. Interestingly, these are also the two IP addresses which did not experience a large decrease in the number of output modes dropped. One potential explanation for this would be that the missing output modes occur with such low probability that even with the mutual information constraint on the generator the model does not receive sufficient gradient feedback to learn to output these values. 
 
 \begin{table}[!htbp]
 	\centering
@@ -659,7 +667,8 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 			& 11  & 0 & 0  & 17 & 0  & 0  & 0  & 0  \\
 			& 0   & 0 & 0  & 30 & 0  & 0  & 0  & 1  \\
 			\hline
-			\multicolumn{1}{l|}{\textbf{\# Combinations}} & 286200 & 185976 & 128520 & 189658 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{}
+			\multicolumn{1}{l|}{\textbf{\# Unique Modes}} & \multicolumn{1}{c|}{32} & \multicolumn{1}{c|}{27} & \multicolumn{1}{c|}{22} & \multicolumn{1}{c|}{27} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
+			\multicolumn{1}{l|}{\textbf{Noise Ratio}} & 5.250 & 8.704 & 3.455 & 11.889 & 6.656 & 3.593 & 4.864 & 3.630
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
@@ -667,4 +676,10 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 \section{Generality of Models}
 \label{sec:cptc18}
 
-One of the most powerful characteristics of Machine Learning models is their ability to adapt well to new datasets from the same domain of study. To ensure that the models presented here maintain generality we retrain each on the CPTC'18 dataset. This dataset continues to make use of Suricata alerts, however features different feature values and is based off an attack on a completely new network architecture.
+One of the most powerful characteristics of Machine Learning models is their ability to adapt well to new datasets from the same domain. To ensure that the models presented here maintain generality we retrain each on the CPTC'18 dataset. This dataset continues to make use of Suricata alerts, however includes different feature values and is based off an attack on a completely new network architecture. The same features and preprocessing steps identified in Section \ref{sec:preproc} were applied to alerts from the four IP addresses that contained the most number of alerts. These IP addresses included 10.0.1.4, 10.0.1.5, 10.0.0.24, and 10.0.0.22. 
+
+%TODO: Add table in here
+
+After training each model the Histogram Intersection and Jensen Shannon Divergence were computed for each, as shown in Table \ref{tab:inter18} and Table \ref{tab:jsd18} respectively. Given the results, both models perform well at generating alerts which emulate the CPTC'18 data. Note that the prior observations regarding mutual information maximization increasing histogram intersection also hold true when applied to a new dataset. 
+
+
