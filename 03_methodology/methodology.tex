@@ -54,11 +54,11 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 		\hline
 		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
 		Input & 64 x 128 & ReLu \\
-		Output - Feature 0 & 128 x a & NA \\
-		Output - Feature 1 & 128 x b & NA \\
-		Output - Feature 2 & 128 x c & NA \\
-		Output  - Feature 3 & 128 x d & NA \\
-		Concatenation & a+b+c+d & NA \\
+		Output - Feature 0 & 128 x A & NA \\
+		Output - Feature 1 & 128 x B & NA \\
+		Output - Feature 2 & 128 x C & NA \\
+		Output  - Feature 3 & 128 x D & NA \\
+		Concatenation & A+B+C+D & NA \\
 		\hline
 	\end{tabular}
 \end{table}
@@ -72,7 +72,7 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 		\multicolumn{3}{c}{\textbf{Discriminator}} \\ 
 		\hline
 		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
-		Input & a+b+c+d x 128 & ReLu \\
+		Input & A+B+C+D x 128 & ReLu \\
 		Output & 128 x 1 & Sigmoid \\
 		\hline
 	\end{tabular}
@@ -94,7 +94,7 @@ A feed forward neural network was implemented to learn the mutual information be
 		\multicolumn{3}{c}{\textbf{Estimator}} \\ 
 		\hline
 		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
-		Input - Generated & a+b+c+d x 128 & NA \\
+		Input - Generated & A+B+C+D x 128 & NA \\
 		Input - Noise & 64 x 128 & NA \\
 		Addition & 128 & NA \\ 
 		Output & 128 x 1 &  NA \\

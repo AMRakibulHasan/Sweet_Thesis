@@ -28,11 +28,11 @@ Analyzing the degree of realism for artificially generated alert data is non-tri
 
 It is important to consider the desirable attributes of a \emph{good} metric. A good metric must provide an intuitive, scalable way to summarize what would otherwise be an intractable amount of data to comprehend. Other desirable properties include ways to directly visualize the results of the metric so that trends may be identified visually, able to capture high level dependencies, and tolerance to samples with the value $0$. 
 
-To this end, we propose the usage of several metrics for analyzing NIDS alert data. First, histogram intersection is considered; this metric compares the similarity of two histograms within the same domain by computing the amount of overlap between them. Histogram intersection meets several of the above criterion, as it is naturally bounded between 0 and 1, easily visualized by directly plotting the histograms being compared, and can be extended to accommodate m-many tuples of features. The m-many tuples can be thought of as a joint histogram, where $m$ is the number of unique features considered in the joint distribution. This can be done automatically by iterating over all $M$ choose $m$ \emph{combinations}, where $M$ is the total number of unique features in the dataset. Mathematically histogram intersection is defined in (\ref{eq:intersection}), where \emph{gt} represents the ground truth data histogram and \emph{gen} represents the generated data histogram, each of which has $N$ samples.
+To this end, we propose the usage of several metrics for analyzing NIDS alert data. First, histogram intersection is considered; this metric compares the similarity of two histograms within the same domain by computing the amount of overlap between them. Histogram intersection meets several of the above criterion, as it is naturally bounded between 0 and 1, easily visualized by directly plotting the histograms being compared, and can be extended to accommodate m-many tuples of features. The m-many tuples can be thought of as a joint histogram, where $m$ is the number of unique features considered in the joint distribution. This can be done automatically by iterating over all $M$ choose $m$ \emph{combinations}, where $M$ is the total number of unique features in the dataset. Mathematically histogram intersection is defined in (\ref{eq:intersection}), where \emph{P} represents the ground truth data histogram and \emph{Q} represents the generated data histogram, each of which has $N$ samples.
 
 \begin{equation}
 \label{eq:intersection}
-G = {{\sum_{i=0}^{N} min(gt_i, gen\_i)} \over {max(\sum_{i=0}^{N} gt_i, \sum_{i=0}^{N} gen_i)}}
+G(P,Q) = {{\sum_{i=0}^{N} min(P_i, Q_i)} \over {max(\sum_{i=0}^{N} P_i, \sum_{i=0}^{N} Q_i)}}
 \end{equation}
 
 Another powerful trait of histogram intersection is that it can be used to reveal dependencies between features within a single alert. This is accomplished by looking at the difference in histogram intersection scores between $m\pm1$ tuples and observing the intersection drop. An intuitive example of this can be thought of as follows; If the intersection for feature $A$ is 0.9 and the intersection for a 2-tuple histogram consisting of features $A$ and $B$ is $0.875$ then it is expected that a dependency exists between $A$ and $B$. It is important to note that this dependency is not inherently bidirectional, as $A$ and $B$ may have varying intersections to begin with. Fig. \ref{fig:metric_graph} illustrates a graph based schema to identify these dependencies visually. 
@@ -46,7 +46,7 @@ Another powerful trait of histogram intersection is that it can be used to revea
 	\label{fig:metric_graph}
 \end{figure}
 
-In order to confirm these dependencies we introduce our second metric; conditional entropy. The conditional entropy of each unique \emph{permutation} may be calculated for each m-tuple of features. Continuing with the previous example this means the conditional entropy of both $A|B$ and $B|A$ are computed. In order to compute a single value that represents the average conditional entropy for all input condition values, the entropy term is computed using (\ref{eq:wce}). This calculation weights the entropy of each possible input combination based off the probability that input $i$ occurs as ${{|w_i|} \over {|w|}}$. ${p_{i|j}}$ represents the probability of the output feature value at index $j$ occurring given the input feature values at index $i$ and must be computed for all possible output values $Z$.
+In order to confirm these dependencies we introduce our second metric; conditional entropy. The conditional entropy of each unique \emph{permutation} may be calculated for each m-tuple of features. Continuing with the previous example this means the conditional entropy of both $A|B$ and $B|A$ are computed. In order to compute a single value that represents the average conditional entropy for all input condition values, the entropy term is computed using (\ref{eq:wce}). This calculation weights the entropy of each possible input combination based off the probability that input $i$ occurs as ${{|w_i|} \over {|w|}}$. ${p_{i|j}}$ represents the probability of the output feature value at index $i$ occurring given the input feature values at index $j$ and must be computed for all unique input value combinations $Z$.
 
 \begin{equation}
 \label{eq:wce}
@@ -60,7 +60,7 @@ In order to further strengthen the argument that there are dependencies between 
 {H}_{X_m} = -\sum_{x_m} p(x_0, x_1,...,x_m)  * \log \big({{p(x_0,x_1,...,x_m)}}\big)
 \end{equation}
 
-Given that natural logarithms are used for the calculation in (\ref{eq:wce}) and (\ref{eq:je}), the resulting value is given in the natural unit of information (nats), a log base e equivalent to bits. Given that the distribution of m-tuple feature histograms is a discrete distribution with finite support the upper bound of entropy is given by the uniform distribution $mathbb{U}$. Note that the cardinality of $mathbb{U}$ varies to match the number of unique values in the conditional or joint probability being normalized. Using this quantity, (\ref{eq:wce}) and (\ref{eq:je}) can be normalized as shown in (\ref{eq:norm_wce}) and (\ref{eq:norm_je}). This has the benefit of naturally bounding the entropies between 0 and 1, similar to the intersection score defined in (\ref{eq:intersection}).
+Given that natural logarithms are used for the calculation in (\ref{eq:wce}) and (\ref{eq:je}), the resulting value is given in the natural unit of information (nats), a log base e equivalent to bits. Given that the distribution of m-tuple feature histograms is a discrete distribution with finite support the upper bound of entropy is given by the uniform distribution $\mathbb{U}$. Note that the cardinality of $\mathbb{U}$ varies to match the number of unique values in the conditional or joint probability being normalized. Using this quantity, (\ref{eq:wce}) and (\ref{eq:je}) can be normalized as shown in (\ref{eq:norm_wce}) and (\ref{eq:norm_je}). This has the benefit of naturally bounding the entropies between 0 and 1, similar to the intersection score defined in (\ref{eq:intersection}).
 
 \begin{equation}
 \label{eq:norm_wce}
@@ -79,6 +79,7 @@ One drawback of using the intersection of histograms is that the metric does not
 Kullback Leibler Divergence, given in (\ref{eq:kldiv}), was considered as a candidate however it does not have the property of zero tolerance and is asymmetric. This would require special handling of null outputs and would require a defined convention of which probability distribution is considered P and which is given by Q.  
 
 \begin{equation}
+	\label{eq:kldiv}
 	D_{KL}(P||Q) = -\sum_{x \in X}P(x)\log{Q(x) \over P(x)}
 \end{equation}
 

@@ -47,23 +47,23 @@ A two part hyperparameter search was employed to find optimal values for generat
 	\caption{Key for Feature Combinations}
 	\label{tab:key}
 	\centering
-	\begin{tabular}{l|c}
-		\textbf{Feature Combination} & \textbf{ID} \\ \hline
-		Alert Signature & 0 \\
-		Time Bin & 1 \\
-		Destination Service & 2 \\
-		Source IP & 3 \\
-		Alert Signature, Destination Service & 4 \\
-		Source IP, Time Bin & 5 \\
-		Alert Signature, Source IP & 6 \\
-		Alert Signature, Time Bin & 7 \\
-		Destination Service, Time Bin & 8 \\
-		Source IP, Destination Service & 9 \\
-		Alert Signature, Source IP, Time Bin & 10 \\
-		Source IP, Destination Service, Time Bin & 11 \\
-		Alert Signature, Source IP, Destination Service & 12 \\
-		Alert Signature, Destination Service, Time Bin & 13 \\
-		Alert Signature, Source IP, Destination Service, Time Bin & 14
+	\begin{tabular}{l|c|c}
+		\textbf{Feature Combination} & \textbf{ID} & \multicolumn{1}{l}{\textbf{M-Tuple}} \\ \hline
+		Alert Signature & A & \multirow{4}{*}{1} \\
+		Time Bin & T &  \\
+		Destination Service & D &  \\
+		Source IP & S &  \\ \hline
+		Alert Signature, Destination Service & A,D & \multirow{6}{*}{2} \\
+		Source IP, Time Bin & S,T &  \\
+		Alert Signature, Source IP & A,S &  \\
+		Alert Signature, Time Bin & A,T &  \\
+		Destination Service, Time Bin & D,T &  \\
+		Source IP, Destination Service & S,D &  \\ \hline
+		Alert Signature, Source IP, Time Bin & A,S,T & \multirow{4}{*}{3} \\
+		Source IP, Destination Service, Time Bin & S,D,T &  \\
+		Alert Signature, Source IP, Destination Service & A,S,D &  \\
+		Alert Signature, Destination Service, Time Bin & A,D,T &  \\ \hline
+		Alert Signature, Source IP, Destination Service, Time Bin & A,S,D,T & 4
 	\end{tabular}
 \end{table}
 
@@ -348,21 +348,21 @@ The histogram intersection was used to analyze the fidelity of results from both
 		\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
 		\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
 		\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} & \textbf{} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \hline
-		\textbf{A} & 0.697 & 0.658 & 0.844 & 0.858 &  & 0.890 & 0.833 & 0.847 & 0.808 \\
-		\textbf{D} & 0.772 & 0.660 & 0.843 & 0.905 &  & 0.899 & 0.846 & 0.823 & 0.827 \\
-		\textbf{S} & 0.717 & 0.867 & 0.846 & 0.843 &  & 0.906 & 0.909 & 0.755 & 0.881 \\
-		\textbf{T} & 0.814 & 0.760 & 0.818 & 0.723 &  & 0.892 & 0.815 & 0.844 & 0.819 \\ \hline
-		\textbf{A,T} & 0.668 & 0.630 & 0.741 & 0.630 &  & 0.774 & 0.774 & 0.754 & 0.717 \\
-		\textbf{A,S} & 0.634 & 0.590 & 0.774 & 0.757 &  & 0.791 & 0.747 & 0.718 & 0.771 \\
-		\textbf{S,D} & 0.698 & 0.598 & 0.768 & 0.779 &  & 0.829 & 0.758 & 0.715 & 0.800 \\
-		\textbf{D,T} & 0.710 & 0.631 & 0.768 & 0.659 &  & 0.790 & 0.777 & 0.736 & 0.726 \\
-		\textbf{S,T} & 0.710 & 0.702 & 0.741 & 0.698 &  & 0.778 & 0.791 & 0.701 & 0.782 \\
-		\textbf{A,D} & 0.693 & 0.637 & 0.828 & 0.830 &  & 0.825 & 0.822 & 0.820 & 0.777 \\ \hline
-		\textbf{A,S,T} & 0.599 & 0.558 & 0.686 & 0.580 &  & 0.655 & 0.727 & 0.683 & 0.632 \\
-		\textbf{A,S,D} & 0.627 & 0.573 & 0.761 & 0.734 &  & 0.733 & 0.737 & 0.697 & 0.740 \\
-		\textbf{A,D,T} & 0.653 & 0.615 & 0.756 & 0.612 &  & 0.715 & 0.731 & 0.731 & 0.685 \\
-		\textbf{S,D,T} & 0.611 & 0.569 & 0.690 & 0.597 &  & 0.652 & 0.734 & 0.632 & 0.635 \\ \hline
-		\textbf{A,S,D,T} & 0.584 & 0.548 & 0.601 & 0.571 &  & 0.607 & 0.718 & 0.626 & 0.615 \\
+		\textbf{A} & 0.697 & 0.658 & 0.844 & \textbf{0.858} &  & \textbf{0.890} & \textbf{0.833} & \textbf{0.847} & 0.808 \\
+		\textbf{D} & 0.772 & 0.660 & 0.843 & \textbf{0.905} &  & \textbf{0.899} & \textbf{0.846} & 0.823 & 0.827 \\
+		\textbf{S} & 0.717 & 0.867 & \textbf{0.846} & 0.843 &  & \textbf{0.906} & 0.909 & 0.755 & 0.881 \\
+		\textbf{T} & 0.814 & 0.760 & 0.818 & 0.723 &  & \textbf{0.892} & \textbf{0.815} & 0.844 & \textbf{0.819} \\ \hline
+		\textbf{A,T} & 0.668 & 0.630 & 0.741 & 0.630 &  & \textbf{0.774} & \textbf{0.774} & 0.754 & \textbf{0.717} \\
+		\textbf{A,S} & 0.634 & 0.590 & \textbf{0.774} & 0.757 &  & \textbf{0.791} & \textbf{0.747} & 0.718 & 0.771 \\
+		\textbf{S,D} & 0.698 & 0.598 & \textbf{0.768} & 0.779 &  & \textbf{0.829} & \textbf{0.758} & 0.715 & 0.800 \\
+		\textbf{D,T} & 0.710 & 0.631 & 0.768 & 0.659 &  & \textbf{0.790} & \textbf{0.777} & 0.736 & \textbf{0.726} \\
+		\textbf{S,T} & 0.710 & 0.702 & 0.741 & 0.698 &  & \textbf{0.778} & \textbf{0.791} & 0.701 & \textbf{0.782} \\
+		\textbf{A,D} & 0.693 & 0.637 & 0.828 & \textbf{0.830} &  & \textbf{0.825} & \textbf{0.822} & 0.820 & 0.777 \\ \hline
+		\textbf{A,S,T} & 0.599 & 0.558 & 0.686 & 0.580 &  & \textbf{0.655} & \textbf{0.727} & 0.683 & \textbf{0.632} \\
+		\textbf{A,S,D} & 0.627 & 0.573 & \textbf{0.761} & 0.734 &  & \textbf{0.733} & \textbf{0.737} & 0.697 & 0.740 \\
+		\textbf{A,D,T} & 0.653 & 0.615 & 0.756 & 0.612 &  & \textbf{0.715} & \textbf{0.731} & 0.731 & \textbf{0.685} \\
+		\textbf{S,D,T} & 0.611 & 0.569 & \textbf{0.690} & 0.597 &  & 0.652 & \textbf{0.734} & 0.632 & 0.635 \\ \hline
+		\textbf{A,S,D,T} & 0.584 & 0.548 & 0.601 & 0.571 &  & \textbf{0.607} & \textbf{0.718} & 0.626 & 0.615 \\
 	\end{tabular}
 	\end{adjustbox}
 \end{table}
@@ -388,21 +388,21 @@ One of the largest benefits of the Jensen Shannon Divergence is that it imposes 
 			\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
 			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
 			\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} & \textbf{} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \hline
-			\textbf{A} & 0.111 & 0.088 & 0.033 & 0.024 &  & 0.017 & 0.031 & 0.031 & 0.033 \\
-			\textbf{D} & 0.052 & 0.086 & 0.032 & 0.012 &  & 0.006 & 0.026 & 0.041 & 0.021 \\
-			\textbf{S} & 0.085 & 0.022 & 0.029 & 0.017 &  & 0.010 & 0.014 & 0.037 & 0.011 \\
-			\textbf{T} & 0.049 & 0.047 & 0.028 & 0.060 &  & 0.009 & 0.030 & 0.019 & 0.023 \\ \hline
-			\textbf{A,T} & 0.150 & 0.128 & 0.063 & 0.131 &  & 0.077 & 0.067 & 0.080 & 0.071 \\
-			\textbf{A,S} & 0.145 & 0.150 & 0.070 & 0.071 &  & 0.059 & 0.076 & 0.067 & 0.063 \\
-			\textbf{S,D} & 0.107 & 0.141 & 0.071 & 0.054 &  & 0.036 & 0.063 & 0.078 & 0.041 \\
-			\textbf{D,T} & 0.121 & 0.126 & 0.063 & 0.126 &  & 0.069 & 0.063 & 0.091 & 0.063 \\
-			\textbf{S,T} & 0.102 & 0.082 & 0.073 & 0.077 &  & 0.049 & 0.053 & 0.096 & 0.039 \\
-			\textbf{A,D} & 0.142 & 0.110 & 0.044 & 0.054 &  & 0.060 & 0.050 & 0.047 & 0.055 \\ \hline
-			\textbf{A,S,T} & 0.189 & 0.181 & 0.119 & 0.193 &  & 0.146 & 0.110 & 0.158 & 0.136 \\
-			\textbf{A,S,D} & 0.173 & 0.169 & 0.080 & 0.100 &  & 0.102 & 0.092 & 0.081 & 0.082 \\
-			\textbf{A,D,T} & 0.173 & 0.141 & 0.072 & 0.157 &  & 0.113 & 0.081 & 0.095 & 0.090 \\
-			\textbf{S,D,T} & 0.174 & 0.178 & 0.114 & 0.197 &  & 0.141 & 0.106 & 0.160 & 0.132 \\ \hline
-			\textbf{A,S,D,T} & 0.209 & 0.194 & 0.121 & 0.213 &  & 0.178 & 0.122 & 0.164 & 0.150 \\
+			\textbf{A} & 0.111 & 0.088 & 0.033 & 0.024 &  & \textbf{0.017} & \textbf{0.031} & 0.031 & 0.033 \\
+			\textbf{D} & 0.052 & 0.086 & 0.032 & 0.012 &  & \textbf{0.006} & \textbf{0.026} & 0.041 & 0.021 \\
+			\textbf{S} & 0.085 & 0.022 & 0.029 & 0.017 &  & \textbf{0.010} & \textbf{0.014} & 0.037 & 0.011 \\
+			\textbf{T} & 0.049 & 0.047 & 0.028 & 0.060 &  & \textbf{0.009} & \textbf{0.030} & 0.019 & \textbf{0.023} \\ \hline
+			\textbf{A,T} & 0.150 & 0.128 & \textbf{0.063} & 0.131 &  & \textbf{0.077} & \textbf{0.067} & 0.080 & \textbf{0.071} \\
+			\textbf{A,S} & 0.145 & 0.150 & 0.070 & 0.071 &  & \textbf{0.059} & \textbf{0.076} & \textbf{0.067} & 0.063 \\
+			\textbf{S,D} & 0.107 & 0.141 & 0.071 & 0.054 &  & \textbf{0.036} & \textbf{0.063} & 0.078 & \textbf{0.041} \\
+			\textbf{D,T} & 0.121 & 0.126 & \textbf{0.063} & 0.126 &  & \textbf{0.069} & \textbf{0.063} & 0.091 & \textbf{0.063} \\
+			\textbf{S,T} & 0.102 & 0.082 & \textbf{0.073} & 0.077 &  & \textbf{0.049} & \textbf{0.053} & 0.096 & \textbf{0.039} \\
+			\textbf{A,D} & 0.142 & 0.110 & 0.044 & 0.054 &  & \textbf{0.060} & \textbf{0.050} & 0.047 & 0.055 \\ \hline
+			\textbf{A,S,T} & 0.189 & 0.181 & \textbf{0.119} & 0.193 &  & \textbf{0.146} & \textbf{0.110} & 0.158 & \textbf{0.136} \\
+			\textbf{A,S,D} & 0.173 & 0.169 & 0.080 & 0.100 &  & \textbf{0.102} & \textbf{0.092} & 0.081 & \textbf{0.082} \\
+			\textbf{A,D,T} & 0.173 & 0.141 & \textbf{0.072} & 0.157 &  & \textbf{0.113} & \textbf{0.081} & 0.095 & \textbf{0.090} \\
+			\textbf{S,D,T} & 0.174 & 0.178 & \textbf{0.114} & 0.197 &  & \textbf{0.141} & \textbf{0.106} & 0.160 & \textbf{0.132} \\ \hline
+			\textbf{A,S,D,T} & 0.209 & 0.194 & \textbf{0.121} & 0.213 &  & \textbf{0.178} & \textbf{0.122} & 0.164 & \textbf{0.150} \\
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
@@ -445,30 +445,30 @@ To verify that the graph correctly highlights feature dependencies Table \ref{ta
 			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{Ground Truth Results}} &  & \multicolumn{4}{c|}{\textbf{Generated Results}} \\
 			\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} &  & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \cline{1-10}
 			\multicolumn{1}{l|}{\textbf{A{\given}T}} & 0.244 & 0.238 & 0.153 & 0.333 &  & 0.260 & 0.288 & 0.196 & 0.539 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}S}} & 0.593 & 0.463 & 0.515 & 0.695 &  & 0.706 & 0.528 & 0.613 & 0.560 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}S}} & 0.593 & \textbf{0.463} & 0.515 & 0.695 &  & 0.706 & \textbf{0.528} & 0.613 & 0.560 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A}} & 0.330 & 0.339 & 0.695 & 0.246 &  & 0.567 & 0.536 & 0.824 & 0.359 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}T}} & 0.262 & 0.252 & 0.263 & 0.405 &  & 0.220 & 0.211 & 0.274 & 0.485 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}A}} & 0.800 & 0.752 & 0.831 & 0.711 &  & 0.280 & 0.340 & 0.572 & 0.367 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}S}} & 0.346 & 0.445 & 0.253 & 0.278 &  & 0.558 & 0.378 & 0.203 & 0.658 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & 0.222 & 0.070 & 0.288 &  & 0.140 & 0.109 & 0.074 & 0.181 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & \textbf{0.222} & 0.070 & 0.288 &  & 0.140 & \textbf{0.109} & 0.074 & 0.181 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}D}} & 0.479 & 0.346 & 0.655 & 0.383 &  & 0.581 & 0.542 & 0.822 & 0.426 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}T}} & 0.287 & 0.234 & 0.152 & 0.379 &  & 0.382 & 0.276 & 0.176 & 0.614 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & 0.385 & 0.271 & 0.475 &  & 0.422 & 0.390 & 0.233 & 0.620 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & \textbf{0.385} & 0.271 & 0.475 &  & 0.422 & \textbf{0.390} & 0.233 & 0.620 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}D}} & 0.822 & 0.779 & 0.856 & 0.785 &  & 0.309 & 0.346 & 0.567 & 0.379 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A}} & 0.006 & 0.246 & 0.006 & 0.016 &  & 0.240 & 0.091 & 0.082 & 0.160 \\ \hline
+			\multicolumn{1}{l|}{\textbf{D{\given}A}} & 0.006 & \textbf{0.246} & 0.006 & 0.016 &  & 0.240 & \textbf{0.091} & 0.082 & 0.160 \\ \hline
 			\multicolumn{1}{l|}{\textbf{S{\given}A,D}} & 0.799 & 0.747 & 0.829 & 0.705 &  & 0.278 & 0.327 & 0.562 & 0.342 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}S,T}} & 0.171 & 0.118 & 0.013 & 0.149 &  & 0.347 & 0.257 & 0.143 & 0.539 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}D,T}} & 0.107 & 0.025 & 0.101 & 0.024 &  & 0.158 & 0.190 & 0.246 & 0.335 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A,D}} & 0.316 & 0.335 & 0.650 & 0.246 &  & 0.541 & 0.515 & 0.815 & 0.341 \\
 			\multicolumn{1}{l|}{\textbf{A{\given}S,D}} & 0.069 & 0.206 & 0.056 & 0.245 &  & 0.124 & 0.399 & 0.066 & 0.165 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & 0.117 & 0.013 & 0.130 &  & 0.223 & 0.267 & 0.165 & 0.468 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}D,T}} & 0.038 & 0.018 & 0.001 & 0.004 &  & 0.102 & 0.083 & 0.061 & 0.126 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A,S}} & 0.005 & 0.243 & 0.005 & 0.012 &  & 0.239 & 0.081 & 0.070 & 0.147 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & \textbf{0.117} & 0.013 & 0.130 &  & 0.223 & \textbf{0.267} & 0.165 & 0.468 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}D,T}} & 0.038 & \textbf{0.018} & 0.001 & 0.004 &  & 0.102 & \textbf{0.083} & 0.061 & 0.126 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}A,S}} & 0.005 & \textbf{0.243} & 0.005 & 0.012 &  & 0.239 & \textbf{0.081} & 0.070 & 0.147 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}S,D}} & 0.393 & 0.340 & 0.587 & 0.348 &  & 0.496 & 0.399 & 0.573 & 0.396 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A,T}} & 0.004 & 0.238 & 0.003 & 0.007 &  & 0.214 & 0.071 & 0.069 & 0.147 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}A,T}} & 0.211 & 0.178 & 0.100 & 0.228 &  & 0.151 & 0.186 & 0.253 & 0.324 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}A,S}} & 0.365 & 0.312 & 0.561 & 0.302 &  & 0.494 & 0.396 & 0.578 & 0.330 \\ \hline
-			\multicolumn{1}{l|}{\textbf{A{\given}S,D,T}} & 0.041 & 0.172 & 0.028 & 0.195 &  & 0.097 & 0.076 & 0.051 & 0.110 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}A,S}} & 0.365 & \textbf{0.312} & 0.561 & 0.302 &  & 0.494 & \textbf{0.396} & 0.578 & 0.330 \\ \hline
+			\multicolumn{1}{l|}{\textbf{A{\given}S,D,T}} & 0.041 & \textbf{0.172} & 0.028 & 0.195 &  & 0.097 & \textbf{0.076} & 0.051 & 0.110 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A,S,T}} & 0.002 & 0.232 & 0.002 & 0.004 &  & 0.212 & 0.067 & 0.053 & 0.134 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}A,D,T}} & 0.209 & 0.167 & 0.498 & 0.222 &  & 0.467 & 0.182 & 0.240 & 0.299 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A,S,D}} & 0.362 & 0.302 & 0.558 & 0.294 &  & 0.147 & 0.381 & 0.566 & 0.312
@@ -502,7 +502,7 @@ To verify that the graph correctly highlights feature dependencies Table \ref{ta
 
 Several instances of feature dependency show good agreement between Fig. \ref{fig:alert_depend_1} and Table \ref{tab:ce}. For example, the drop in interesection score between A,S and A,S,T is low and the conditional entropy of the ground truth distribution T{\given}A,S is low. 
 
-To further study specific feature-value relationships between the ground truth and generated data distributions conditional probability tables may be output for each feature permutation. In order to make these tables human-readable the following color schema is applied: cells which have probability 0 are highlighted in red; cells with probability 1 are highlighted in green. This two step process highlights both the sparsity of output probabilities as well as cases where the input results in a deterministic output. Specific examples of these tables for the ground truth distribution, WGAN-GP generated distribution, and WGAN-GPMI generated distribution will be covered in \ref{sec:gpmi_dep}
+To further study specific feature-value relationships between the ground truth and generated data distributions conditional probability tables may be output for each feature permutation. In order to make these tables human-readable the following color schema is applied: cells which have probability 0 are highlighted in red; cells with probability 1 are highlighted in blue. This two step process highlights both the sparsity of output probabilities as well as cases where the input results in a deterministic output. Specific examples of these tables for the ground truth distribution, WGAN-GP generated distribution, and WGAN-GPMI generated distribution will be covered in \ref{sec:gpmi_dep}
 
 \subsection{WGAN-GPMI Feature Dependency Performance}
 \label{sec:gpmi_dep}
@@ -529,34 +529,34 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 			\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
 			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{Ground Truth Results}} &  & \multicolumn{4}{c|}{\textbf{Generated Results}} \\
 			\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} &  & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \cline{1-10}
-			\multicolumn{1}{l|}{\textbf{A{\given}T}} & 0.244 & 0.238 & 0.153 & 0.333 &  & 0.244	& 0.238 &	0.153 &	0.334 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}S}} & 0.593 & 0.463 & 0.515 & 0.695 &  & 0.593	&	0.463	&	0.516	&	0.695 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}A}} & 0.330 & 0.339 & 0.695 & 0.246 &  & 0.330	&	0.339	&	0.695	&	0.246 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}T}} & 0.262 & 0.252 & 0.263 & 0.405 &  & 0.263	&	0.186	&	0.252	&	0.406 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}A}} & 0.800 & 0.752 & 0.831 & 0.711 &  & 0.229	&	0.239	&	0.526	&	0.222 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}S}} & 0.346 & 0.445 & 0.253 & 0.278 &  & 0.509	&	0.385	&	0.207	&	0.558 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & 0.222 & 0.070 & 0.288 &  & 0.149	&	0.026	&	0.007	&	0.097 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}D}} & 0.479 & 0.346 & 0.655 & 0.383 &  & 0.479	&	0.346	&	0.655	&	0.383 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}T}} & 0.287 & 0.234 & 0.152 & 0.379 &  & 0.287	&	0.234	&	0.152	&	0.379 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & 0.385 & 0.271 & 0.475 &  & 0.403	&	0.376	&	0.214	&	0.543 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}D}} & 0.822 & 0.779 & 0.856 & 0.785 &  & 0.436	&	0.260	&	0.474	&	0.301 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A}} & 0.006 & 0.246 & 0.006 & 0.016 &  & 0.055	&	0.009	&	0.048	&	0.000 \\ \hline
-			\multicolumn{1}{l|}{\textbf{S{\given}A,D}} & 0.799 & 0.747 & 0.829 & 0.705 &  & 0.228	&	0.226	&	0.474	&	0.222 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}S,T}} & 0.171 & 0.118 & 0.013 & 0.149 &  & 0.171	&	0.118	&	0.013	&	0.149 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}D,T}} & 0.107 & 0.025 & 0.101 & 0.024 &  & 0.107	&	0.025	&	0.101	&	0.024 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}A,D}} & 0.316 & 0.335 & 0.650 & 0.246 &  & 0.317	&	0.335	&	0.650	&	0.246 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S,D}} & 0.069 & 0.206 & 0.056 & 0.245 &  & 0.018	&	0.003	&	0.007	&	0.055 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & 0.117 & 0.013 & 0.130 &  & 0.112	&	0.117	&	0.013	&	0.131 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}D,T}} & 0.038 & 0.018 & 0.001 & 0.004 &  & 0.038	&	0.018	&	0.001	&	0.004 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A,S}} & 0.005 & 0.243 & 0.005 & 0.012 &  & 0.054	&	0.000	&	0.000	&	0.000 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}S,D}} & 0.393 & 0.340 & 0.587 & 0.348 &  & 0.176	&	0.144	&	0.334	&	0.170 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A,T}} & 0.004 & 0.238 & 0.003 & 0.007 &  & 0.044	&	0.006	&	0.000	&	0.000 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}A,T}} & 0.211 & 0.178 & 0.100 & 0.228 &  & 0.055	&	0.012	&	0.100	&	0.019 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}A,S}} & 0.365 & 0.312 & 0.561 & 0.302 &  & 0.170	&	0.144	&	0.328	&	0.089 \\ \hline
-			\multicolumn{1}{l|}{\textbf{A{\given}S,D,T}} & 0.041 & 0.172 & 0.028 & 0.195 &  & 0.005	&	0.003	&	0.000	&	0.001 \\
-			\multicolumn{1}{l|}{\textbf{D{\given}A,S,T}} & 0.002 & 0.232 & 0.002 & 0.004 &  & 0.044	&	0.000	&	0.000	&	0.000 \\
-			\multicolumn{1}{l|}{\textbf{T{\given}A,D,S}} & 0.209 & 0.167 & 0.498 & 0.222 &  & 0.157	&	0.144	&	0.328	&	0.089 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}A,T,D}} & 0.362 & 0.302 & 0.558 & 0.294 &  & 0.055	&	0.004	&	0.100	&	0.019
+			\multicolumn{1}{l|}{\textbf{A{\given}T}} & \textbf{0.244} & \textbf{0.238} & \textbf{0.153} & \textbf{0.333} &  & \textbf{0.244} & \textbf{0.238} & \textbf{0.153} & \textbf{0.334} \\
+			\multicolumn{1}{l|}{\textbf{T{\given}S}} & \textbf{0.593} & \textbf{0.463} & \textbf{0.515} & \textbf{0.695} &  & \textbf{0.593} & \textbf{0.463} & \textbf{0.516} & \textbf{0.695} \\
+			\multicolumn{1}{l|}{\textbf{T{\given}A}} & \textbf{0.330} & \textbf{0.339} & \textbf{0.695} & \textbf{0.246} &  & \textbf{0.330} & \textbf{0.339} & \textbf{0.695} & \textbf{0.246} \\
+			\multicolumn{1}{l|}{\textbf{S{\given}T}} & 0.262 & 0.252 & 0.263 & 0.405 &  & 0.263	& 0.186	& 0.252	& 0.406 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}A}} & 0.800 & 0.752 & 0.831 & 0.711 &  & 0.229	& 0.239	& 0.526	& 0.222 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}S}} & 0.346 & 0.445 & 0.253 & 0.278 &  & 0.509	& 0.385	& 0.207	& 0.558 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & 0.222 & 0.070 & 0.288 &  & 0.149	& 0.026	& 0.007	& 0.097 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}D}} & \textbf{0.479} & \textbf{0.346} & \textbf{0.655} & \textbf{0.383} &  & \textbf{0.479} & \textbf{0.346} & \textbf{0.655} & \textbf{0.383} \\
+			\multicolumn{1}{l|}{\textbf{D{\given}T}} & \textbf{0.287} & \textbf{0.234} & \textbf{0.152} & \textbf{0.379} &  & \textbf{0.287} & \textbf{0.234} & \textbf{0.152} & \textbf{0.379} \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & 0.385 & 0.271 & 0.475 &  & 0.403	& 0.376	& 0.214	& 0.543 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}D}} & 0.822 & 0.779 & 0.856 & 0.785 &  & 0.436	& 0.260	& 0.474	& 0.301 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}A}} & 0.006 & 0.246 & 0.006 & 0.016 &  & 0.055	& 0.009	& 0.048	& 0.000 \\ \hline
+			\multicolumn{1}{l|}{\textbf{S{\given}A,D}} & 0.799 & 0.747 & 0.829 & 0.705 &  & 0.228 &	0.226 &	0.474 &	0.222 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}S,T}} & \textbf{0.171} & \textbf{0.118} & \textbf{0.013} & \textbf{0.149} &  & \textbf{0.171} & \textbf{0.118} & \textbf{0.013} & \textbf{0.149} \\
+			\multicolumn{1}{l|}{\textbf{S{\given}D,T}} & \textbf{0.107} & \textbf{0.025} & \textbf{0.101} & \textbf{0.024} &  & \textbf{0.107} & \textbf{0.025} & \textbf{0.101} & \textbf{0.024} \\
+			\multicolumn{1}{l|}{\textbf{T{\given}A,D}} & \textbf{0.316} & \textbf{0.335} & \textbf{0.650} & \textbf{0.246} &  & \textbf{0.316} & \textbf{0.335} & \textbf{0.650} & \textbf{0.246} \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S,D}} & 0.069 & 0.206 & 0.056 & 0.245 &  & 0.018 &	0.003 &	0.007 &	0.055 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & 0.117 & 0.013 & 0.130 &  & 0.112 &	0.117 &	0.013 &	0.131 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}D,T}} & \textbf{0.038} & \textbf{0.018} & \textbf{0.001} & \textbf{0.004} &  & \textbf{0.038} & \textbf{0.018} & \textbf{0.001} & \textbf{0.004} \\
+			\multicolumn{1}{l|}{\textbf{D{\given}A,S}} & 0.005 & 0.243 & 0.005 & 0.012 &  & 0.054 &	0.000 &	0.000 &	0.000 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}S,D}} & 0.393 & 0.340 & 0.587 & 0.348 &  & 0.176 &	0.144 &	0.334 &	0.170 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}A,T}} & 0.004 & 0.238 & 0.003 & 0.007 &  & 0.044 &	0.006 &	0.000 &	0.000 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}A,T}} & 0.211 & 0.178 & 0.100 & 0.228 &  & 0.055 &	0.012 &	0.100 &	0.019 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}A,S}} & 0.365 & 0.312 & 0.561 & 0.302 &  & 0.170 &	0.144 &	0.328 &	0.089 \\ \hline
+			\multicolumn{1}{l|}{\textbf{A{\given}S,D,T}} & 0.041 & 0.172 & 0.028 & 0.195 &  & 0.005	& 0.003	& 0.000	& 0.001 \\
+			\multicolumn{1}{l|}{\textbf{D{\given}A,S,T}} & 0.002 & 0.232 & 0.002 & 0.004 &  & 0.044	& 0.000	& 0.000	& 0.000 \\
+			\multicolumn{1}{l|}{\textbf{T{\given}A,D,S}} & 0.209 & 0.167 & 0.498 & 0.222 &  & 0.157	& 0.144	& 0.328	& 0.089 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}A,T,D}} & 0.362 & 0.302 & 0.558 & 0.294 &  & 0.055	& 0.004	& 0.100	& 0.019
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
@@ -587,24 +587,28 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 
 Despite identical conditional entropy values existing between the ground truth and generated distribution it is important to note that this does not guarantee that the distributions are identical. Fundamentally, two different distributions can have the same entropy. Additionally, the conditional entropy calculation used is weighted by the probability that a given input conditioning value occurs. This allows inputs that occur frequently to have more influence over the conditional entropy value than inputs that occur rarely. Given a very small chance of an input occuring it's contribution to the conditional entropy calculation could become negligible. In order to better understand each model, the conditional probability tables showing inputs and their respective output probability were generated. Figure \ref{fig:make_this} shows subsections of the conditional probability table's from the ground truth, WGAN-GP generated, and WGAN-GPMI generated distributions. 
 
-% TODO Add figure
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textheight,height=.5\textwidth,angle=90]{cond_prob_comp}
+	\caption{
+		Comparison of Conditional Probability Tables
+	}
+	\label{fig:make_this}
+\end{figure}
 
 The figure shows the conditional probability table for A{\given}D,T. All of the tables are formatted such that the input feature combination is given in the first column, the probability of that input occurring is given by the second column, the third column indicates the number of times that input occurred, and the remaining columns indicate the output values and their probability of occurring. This allows for identification of the influence each input combination would have on the conditional probability calculation.
 
-Note that the ground truth distribution exhibits deterministic behavior for many of the input feature combinations. Capturing these cases of deterministic behavior is especially important for inputs which occur frequently. For example, the successfully learning the dependency between X and Y predicting the value of Z is important to model accuracy. The WGAN-GP generated distribution fails to do this, while the WGAN-GPMI distribution performs far better. 
+Note that the ground truth distribution exhibits deterministic behavior for many of the input feature combinations. Capturing these cases of deterministic behavior is especially important for inputs which occur frequently. For example, the successfully learning the dependency between ms-wbt-server and time bin 1 predicting the value of the correct alert signature is important to model accuracy. The WGAN-GP generated distribution exploits this and generates many more samples than the ground truth contains, while the WGAN-GPMI distribution performs far closer to the real probability of occurrence. Additionally, several input combinations which the models fail to generate are highlighted in the table. Note that the input combination of kerberos+6 only occurs once in the ground truth, making it nearly impossible for either model to learn to recreate this value. But other cases such as mysql+3 occur 277 times in the ground truth distribution but only twice in the WGAN-GP Model. WGAN-GPMI does a far better job of recreating this input, as it occurs 194 times in the generated distribution. 
 
-Another interesting observation from these probability tables is that sometimes only a subset of the input conditioning values affects the output value. For example, if the given Destination Service value is (VALUE) then the output Alert Signature is (VALUE) regardless of the Time Bin value. Additionally, the table highlights that (VALUE) only occurs in Time Bin (VALUES).
+Another interesting observation from these probability tables is that sometimes only a subset of the input conditioning values affects the output value. For example, if the given Destination Service value is ms-wbt-server then the output Alert Signature is ET DOS Microsoft RDP Syn. for all Time Bin values except 5. Additionally, the table highlights that (VALUE) only occurs in Time Bin (VALUES).
 
 Finally, several input combination instances that occur in the ground truth distribution never occur in the WGAN-GP generated distribution. These include (INPUTS). This is referred to as mode dropping and covered more in depth in Section \ref{sec:output}.
 
-% TODO Output raw counts for conditional entropy tables
-% Can some of the incorrect output signature ever occur from the inputs given
-% Show ratio of incorrect modes over correct modes rather than number of combinations
-% Show counts of those incorrect modes (how much probability mass is encompassed by the incorrect modes)
-
 \section{Output Modes Captured}
 \label{sec:output}
-Finally, to assess output modes captured by each model, two values were collected; the number of values that existed in the ground truth that were not generated by the model and the number of values generated by the model that never occurred in the ground truth. Like all previous metrics, these values were collected for each unique m-tuple combination of features. Table \ref{tab:output_modes} shows the number of output modes missed by the generative model. The bottom two rows identify the number of unique output modes consisting of all 4 features for each target IP and the percentage of modes dropped.  Note that this table shows the direct benefit of mutual information maximization, as the number of output modes missed by the model decreases across the board for the WGAN-GPMI model. Some of the target IP addresses recover more modes than other when moving to the WGAN-GPMI model; 10.0.0.100, as well as 10.0.0.22,  halve the number of output modes dropped.
+Finally, to assess output modes captured by each model, two values were collected; the number of values that existed in the ground truth that were not generated by the model and the number of values generated by the model that never occurred in the ground truth. Like all previous metrics, these values were collected for each unique m-tuple combination of features. 
+
+Table \ref{tab:output_modes} shows the number of output modes missed by the generative model. The bottom two rows identify the number of unique output modes consisting of all 4 features for each target IP and the percentage of modes dropped.  Note that this table shows the direct benefit of mutual information maximization, as the number of output modes missed by the model decreases across the board for the WGAN-GPMI model. Some of the target IP addresses recover more modes than other when moving to the WGAN-GPMI model; 10.0.0.100, as well as 10.0.0.22,  halve the number of output modes dropped. On the other hand, 10.0.0.27 and 10.0.99.143 only see a minor improvement when adding in the mutual information constraint. 
 
 
 \begin{table}[!htbp]
@@ -630,13 +634,16 @@ Finally, to assess output modes captured by each model, two values were collecte
 			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{1} & 3 \\
 			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & 0 \\
 			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{10} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & 1 \\ \hline
+			\multicolumn{1}{l|}{\textbf{\# Alerts}} & \multicolumn{1}{c|}{3388} & \multicolumn{1}{c|}{3166} & \multicolumn{1}{c|}{2974} & \multicolumn{1}{c|}{2182} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
 			\multicolumn{1}{l|}{\textbf{\# Unique Modes}} & \multicolumn{1}{c|}{32} & \multicolumn{1}{c|}{27} & \multicolumn{1}{c|}{22} & \multicolumn{1}{c|}{27} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
 			\multicolumn{1}{l|}{\textbf{\% Modes Dropped}} & \multicolumn{1}{c|}{0.6563} & \multicolumn{1}{c|}{0.5556} & \multicolumn{1}{c|}{0.4091} & \multicolumn{1}{c|}{0.3704} & \multicolumn{1}{c|}{0.3125} & \multicolumn{1}{c|}{0.5185} & \multicolumn{1}{c|}{0.1818} & \multicolumn{1}{c}{0.2963}
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
 
-Table \ref{tab:random_outputs} shows the number of noisy outputs by the generative model that did not occur in the ground truth. The bottom two rows of this table shows the number of unique modes and the ratio of noisy 4-tuple samples over the number of true combinations.  For target IP 10.0.99.143, the target IP tested with the lowest number of alerts, the WGAN-GPMI model appears to create less noisy outputs. Additionally 10.0.0.27 also sees a significant drop in the number of noisy outputs generated when using the WGAN-GPMI model. Interestingly, these are also the two IP addresses which did not experience a large decrease in the number of output modes dropped. One potential explanation for this would be that the missing output modes occur with such low probability that even with the mutual information constraint on the generator the model does not receive sufficient gradient feedback to learn to output these values. 
+Table \ref{tab:random_outputs} shows the number of noisy outputs by the generative model that did not occur in the ground truth. The bottom two rows of this table shows the number of unique modes and the ratio of noisy 4-tuple samples over the number of true combinations.  For target IP 10.0.99.143, the target IP tested with the lowest number of alerts, the WGAN-GPMI model appears to create less noisy outputs. Additionally 10.0.0.27 also sees a significant drop in the number of noisy outputs generated when using the WGAN-GPMI model. Interestingly, these are also the two IP addresses which did not experience a large decrease in the number of output modes dropped. 
+
+One potential explanation for this would be that the missing output modes occur with such low probability that even with the mutual information constraint on the generator the model does not receive sufficient gradient feedback to learn to output these values. Samples like this were previously identified in Section \ref{sec:gpmi_dep}; methods to recreate rare samples like this remains an ongoing challenge that is incredibly important to the field of Cyber Security. It is possible that critical actions, such as data exfiltration may only generate a small number of alerts rarely over the course of an attack. Being able to model such behaviors would be extremely beneficial to proactive Cyber Defense, where critical vulnerabilities are identified and patched. 
 
 \begin{table}[!htbp]
 	\centering
@@ -667,6 +674,8 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 			& 11  & 0 & 0  & 17 & 0  & 0  & 0  & 0  \\
 			& 0   & 0 & 0  & 30 & 0  & 0  & 0  & 1  \\
 			\hline
+			\multicolumn{1}{l|}{\textbf{\# Alerts}} & \multicolumn{1}{c|}{3388} & \multicolumn{1}{c|}{3166} & \multicolumn{1}{c|}{2974} & \multicolumn{1}{c|}{2182} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
+			\multicolumn{1}{l|}{\textbf{\# Combinations}} & \multicolumn{1}{c|}{286200} & \multicolumn{1}{c|}{185976} & \multicolumn{1}{c|}{128520} & \multicolumn{1}{c|}{189658} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
 			\multicolumn{1}{l|}{\textbf{\# Unique Modes}} & \multicolumn{1}{c|}{32} & \multicolumn{1}{c|}{27} & \multicolumn{1}{c|}{22} & \multicolumn{1}{c|}{27} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l}{} \\
 			\multicolumn{1}{l|}{\textbf{Noise Ratio}} & 5.250 & 8.704 & 3.455 & 11.889 & 6.656 & 3.593 & 4.864 & 3.630
 		\end{tabular}
@@ -676,10 +685,37 @@ Table \ref{tab:random_outputs} shows the number of noisy outputs by the generati
 \section{Generality of Models}
 \label{sec:cptc18}
 
-One of the most powerful characteristics of Machine Learning models is their ability to adapt well to new datasets from the same domain. To ensure that the models presented here maintain generality we retrain each on the CPTC'18 dataset. This dataset continues to make use of Suricata alerts, however includes different feature values and is based off an attack on a completely new network architecture. The same features and preprocessing steps identified in Section \ref{sec:preproc} were applied to alerts from the four IP addresses that contained the most number of alerts. These IP addresses included 10.0.1.4, 10.0.1.5, 10.0.0.24, and 10.0.0.22. 
+One of the most powerful characteristics of Machine Learning models is their ability to adapt well to new datasets from the same domain. To ensure that the models presented here maintain generality we retrain each on the CPTC'18 dataset. This dataset continues to make use of Suricata alerts, however includes different feature values and is based off an attack on a completely new network architecture. The same features and preprocessing steps identified in Section \ref{sec:preproc} were applied to alerts from the four IP addresses that contained the most number of alerts. These IP addresses included 10.0.1.46, 10.0.1.5, 10.0.0.24, and 10.0.0.22. 
 
-%TODO: Add table in here
+\begin{table}[!htbp]
+	\caption{Histogram Intersection for all Feature Combinations: CPTC'18}
+	\label{tab:inter18}
+	\centering
+	\begin{adjustbox}{angle=90}
+		\begin{tabular}{l|c|c|c|c|c|c|c|c|c|}
+			\multicolumn{1}{c|}{\textbf{}} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
+			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
+			\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.1.46} & \textbf{10.0.1.5} & \textbf{10.0.0.24} & \textbf{10.0.0.22} &  & \textbf{10.0.1.46} & \textbf{10.0.1.5} & \textbf{10.0.0.24} & \textbf{10.0.0.22} \\ \hline
+			\textbf{A} & 0.752 & \textbf{0.810} & 0.801 & 0.815 &  & \textbf{0.852} & 0.765 & \textbf{0.825} & \textbf{0.863} \\
+			\textbf{D} & 0.764 & \textbf{0.954} & 0.800 & 0.820 &  & \textbf{0.859} & 0.909 & \textbf{0.918} & \textbf{0.874} \\
+			\textbf{S} & 0.744 & 0.740 & 0.789 & 0.812 &  & \textbf{0.844} & \textbf{0.785} & \textbf{0.872} & \textbf{0.867} \\
+			\textbf{T} & 0.782 & 0.718 & 0.851 & 0.811 &  & \textbf{0.826} & \textbf{0.766} & \textbf{0.928} & \textbf{0.857} \\ \hline
+			\textbf{A,T} & 0.764 & \textbf{0.954} & 0.800 & \textbf{0.820} &  & \textbf{0.859} & 0.909 & \textbf{0.918} & 0.874 \\
+			\textbf{A,S} & 0.744 & 0.740 & 0.789 & 0.812 &  & \textbf{0.844} & \textbf{0.785} & \textbf{0.872} & \textbf{0.867} \\
+			\textbf{S,D} & 0.782 & 0.718 & 0.851 & 0.811 &  & \textbf{0.826} & \textbf{0.766} & \textbf{0.928} & \textbf{0.857} \\
+			\textbf{D,T} & 0.679 & 0.701 & 0.784 & 0.793 &  & \textbf{0.746} & \textbf{0.744} & \textbf{0.898} & \textbf{0.811} \\
+			\textbf{S,T} & 0.667 & 0.734 & 0.766 & 0.789 &  & \textbf{0.753} & \textbf{0.773} & \textbf{0.848} & \textbf{0.816} \\
+			\textbf{A,D} & 0.646 & 0.644 & 0.774 & 0.796 &  & \textbf{0.694} & \textbf{0.646} & \textbf{0.862} & \textbf{0.807} \\ \hline
+			\textbf{A,S,T} & 0.679 & 0.701 & 0.784 & 0.793 &  & \textbf{0.746} & \textbf{0.744} & \textbf{0.898} & \textbf{0.811} \\
+			\textbf{A,S,D} & 0.667 & 0.734 & 0.766 & 0.789 &  & \textbf{0.753} & \textbf{0.773} & \textbf{0.848} & \textbf{0.816} \\
+			\textbf{A,D,T} & 0.646 & 0.644 & 0.774 & 0.796 &  & \textbf{0.694} & \textbf{0.646} & \textbf{0.862} & \textbf{0.807} \\
+			\textbf{S,D,T} & 0.536 & 0.617 & 0.750 & \textbf{0.769} &  & \textbf{0.580} & 0.616 & \textbf{0.820} & 0.762 \\ \hline
+			\textbf{A,S,D,T} & 0.536 & \textbf{0.617} & 0.750 & \textbf{0.769} &  & \textbf{0.580} & 0.616 & \textbf{0.820} & 0.762
+		\end{tabular}
+	\end{adjustbox}
+\end{table}
 
-After training each model the Histogram Intersection and Jensen Shannon Divergence were computed for each, as shown in Table \ref{tab:inter18} and Table \ref{tab:jsd18} respectively. Given the results, both models perform well at generating alerts which emulate the CPTC'18 data. Note that the prior observations regarding mutual information maximization increasing histogram intersection also hold true when applied to a new dataset. 
+
+After training each model the Histogram Intersection was computed for each generated distribution, as shown in Table \ref{tab:inter18}. Given the results, both models perform well at generating alerts which emulate the CPTC'18 data. Note that the prior observations regarding mutual information maximization increasing histogram intersection also hold true when applied to a new dataset. Additionally, the methods presented for identifying feature dependencies and output mode dropping are fully applicable to this new dataset. 
 
 
