@@ -360,32 +360,33 @@ Fig. \ref{fig:inter} steps through these levels of combinations for target 10.0.
 	\label{fig:inter}
 \end{figure}
 
-The histogram intersection was used to analyze the fidelity of results from both of the models tested. In general, the WGAN-GPMI is able to outperform the standard WGAN-GP model. This suggests that the mutual information constraint results in a model which manages to emulate the ground truth distribution with a higher degree of accuracy than standard models are. Table \ref{tab:inter} summarizes the results of both models across all 4 target IP addresses. Additionally, the standard deviation is shown with each value.
+The histogram intersection was used to analyze the fidelity of results from both of the models tested. In general, the WGAN-GPMI is able to outperform the standard WGAN-GP model. This suggests that the mutual information constraint results in a model which manages to emulate the ground truth distribution with a higher degree of accuracy than standard models are. Table \ref{tab:inter} summarizes the results of both models across all 4 target IP addresses. The maximum intersection score for each combination of features is bolded if the given score is at least 0.05 greater than the intersection score of the other model. Additionally, the standard deviation was computed using 1000 unique distributions sampled from the generative model and is shown for each feature combination on each target. 
 
 \begin{table}[!htbp]
 	\caption{Histogram Intersection for all Feature Combinations}
 	\label{tab:inter}
 	\centering
+	\small
 	\begin{adjustbox}{angle=90}
 	\begin{tabular}{l|c|c|c|c|c|c|c|c|c|}
 		\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
 		\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
 		\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} & \textbf{} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \hline
-		\textbf{A} & $0.697 \pm 0.002$ & $0.658 \pm 0.007$ & $0.844 \pm 0.005$ & \textbf{0.858 $\pm$ 0.009} &   						& \textbf{0.890 $\pm$ 0.006} & \textbf{0.833 $\pm$ 0.005} & \textbf{0.847 $\pm$ 0.006} & 0.808 $\pm$ 0.009 \\
-		\textbf{D} & $0.772 \pm 0.007$ & $0.660 \pm 0.006$ & $0.843 \pm 0.005$ & \textbf{0.905 $\pm$ 0.009} &  					  	& \textbf{0.899 $\pm$ 0.006} & \textbf{0.846 $\pm$ 0.005} & 0.823 $\pm$ 0.007 & 0.827 $\pm$ 0.009 \\
-		\textbf{S} & $0.717 \pm 0.007$ & $0.867 \pm 0.009$ & \textbf{0.846 $\pm$ 0.008} & $0.843 \pm 0.009$ &  					  	& \textbf{0.906 $\pm$ 0.008} & 0.909 $\pm$ 0.005 & 0.755 $\pm$ 0.005 & 0.881 $\pm$ 0.010 \\
-		\textbf{T} & $0.814 \pm 0.008$ & $0.760 \pm 0.007$ & $0.818 \pm 0.008$ & $0.723 \pm 0.009$ &  										  & \textbf{0.892 $\pm$ 0.008} & \textbf{0.815 $\pm$ 0.007} & 0.844 $\pm$ 0.008 & \textbf{0.819 $\pm$ 0.009} \\ \hline
-		\textbf{A,T} & $0.668 \pm 0.007$ & $0.630 \pm 0.007$ & $0.741 \pm 0.007$ & $0.630 \pm 0.0084$ &   						        & \textbf{0.774 $\pm$ 0.008} & \textbf{0.774 $\pm$ 0.007} & 0.754 $\pm$ 0.008 & \textbf{0.717 $\pm$ 0.010} \\
-		\textbf{A,S} & $0.634 \pm 0.007$ & $0.590 \pm 0.007$ & \textbf{0.774 $\pm$ 0.004} & $0.757 \pm 0.008$ &  						& \textbf{0.791 $\pm$ 0.008} & \textbf{0.747 $\pm$ 0.007} & 0.718 $\pm$ 0.008 & 0.771 $\pm$ 0.010 \\
-		\textbf{S,D} & $0.698 \pm 0.007$ & $0.598 \pm 0.007$ & \textbf{0.768 $\pm$ 0.004} & $0.779 \pm 0.009$ &  						& \textbf{0.829 $\pm$ 0.007} & \textbf{0.758 $\pm$ 0.005} & 0.715 $\pm$ 0.005 & 0.800 $\pm$ 0.010 \\
-		\textbf{D,T} & $0.710 \pm 0.007$ & $0.631 \pm 0.006$ & $0.768 \pm 0.004$ & $0.659 \pm 0.009$ & 						          & \textbf{0.790 $\pm$ 0.008} & \textbf{0.777 $\pm$ 0.007} & 0.736 $\pm$ 0.008 & \textbf{0.726 $\pm$ 0.009} \\
-		\textbf{S,T} & $0.710 \pm 0.007$ & $0.702 \pm 0.008$ & $0.741 \pm 0.007$ & $0.698 \pm 0.009$ &  						        & \textbf{0.778 $\pm$ 0.008} & \textbf{0.791 $\pm$ 0.006} & 0.701 $\pm$ 0.007 & \textbf{0.782 $\pm$ 0.010} \\
-		\textbf{A,D} & $0.693 \pm 0.002$ & $0.637 \pm 0.006$ & $0.828 \pm 0.005$ & \textbf{0.830 $\pm$ 0.008} & 					  & \textbf{0.825 $\pm$ 0.008} & \textbf{0.822 $\pm$ 0.006} & 0.820 $\pm$ 0.008 & 0.777 $\pm$ 0.010 \\ \hline
-		\textbf{A,S,T} & $0.599 \pm 0.007$ & $0.558 \pm 0.007$ & $0.686 \pm 0.007$ & $0.580 \pm 0.008$ &  						      & \textbf{0.655 $\pm$ 0.008} & \textbf{0.727 $\pm$ 0.006} & 0.683 $\pm$ 0.008 & \textbf{0.632 $\pm$ 0.010} \\
-		\textbf{A,S,D} & $0.627 \pm 0.007$ & $0.573 \pm 0.007$ & \textbf{0.761 $\pm$ 0.004} & $0.734 \pm 0.009$ &  					& \textbf{0.733 $\pm$ 0.008} & \textbf{0.737 $\pm$ 0.006} & 0.697 $\pm$ 0.008 & 0.740 $\pm$ 0.010 \\
-		\textbf{A,D,T} & $0.653 \pm 0.007$ & $0.615 \pm 0.006$ & $0.756 \pm 0.007$ & $0.612 \pm 0.008$ &  						      & \textbf{0.715 $\pm$ 0.008} & \textbf{0.731 $\pm$ 0.006} & 0.731 $\pm$ 0.007 & \textbf{0.685 $\pm$ 0.010} \\
-		\textbf{S,D,T} & $0.611 \pm 0.007$ & $0.569 \pm 0.007$ & \textbf{0.690 $\pm$ 0.007} & $0.597 \pm 0.008$ &  					& 0.652 $\pm$ 0.008 & \textbf{0.734 $\pm$ 0.007} & 0.632 $\pm$ 0.008 & 0.635 $\pm$ 0.010 \\ \hline
-		\textbf{A,S,D,T} & $0.584 \pm 0.007$ & $0.548 \pm 0.007$ & $0.601 \pm 0.007$ & $0.571 \pm 0.008$ &  						    & \textbf{0.607 $\pm$ 0.008} & \textbf{0.718 $\pm$ 0.006} & 0.626 $\pm$ 0.008 & 0.615 $\pm$ 0.010 \\
+		\textbf{A} & $0.697 \pm 0.002$ & $0.658 \pm 0.007$ & $0.844 \pm 0.005$ & \textbf{0.858 $\pm$ 0.009} & & \textbf{0.890 $\pm$ 0.006} & \textbf{0.833 $\pm$ 0.005} & \textbf{0.847 $\pm$ 0.006} & 0.808 $\pm$ 0.009 \\
+		\textbf{D} & $0.772 \pm 0.007$ & $0.660 \pm 0.006$ & $0.843 \pm 0.005$ & \textbf{0.905 $\pm$ 0.009} & & \textbf{0.899 $\pm$ 0.006} & \textbf{0.846 $\pm$ 0.005} & 0.823 $\pm$ 0.007 & 0.827 $\pm$ 0.009 \\
+		\textbf{S} & $0.717 \pm 0.007$ & $0.867 \pm 0.009$ & \textbf{0.846 $\pm$ 0.008} & $0.843 \pm 0.009$ & & \textbf{0.906 $\pm$ 0.008} & 0.909 $\pm$ 0.005 & 0.755 $\pm$ 0.005 & 0.881 $\pm$ 0.010 \\
+		\textbf{T} & $0.814 \pm 0.008$ & $0.760 \pm 0.007$ & $0.818 \pm 0.008$ & $0.723 \pm 0.009$ & & \textbf{0.892 $\pm$ 0.008} & \textbf{0.815 $\pm$ 0.007} & 0.844 $\pm$ 0.008 & \textbf{0.819 $\pm$ 0.009} \\ \hline
+		\textbf{A,T} & $0.668 \pm 0.007$ & $0.630 \pm 0.007$ & $0.741 \pm 0.007$ & $0.630 \pm 0.008$ & & \textbf{0.774 $\pm$ 0.008} & \textbf{0.774 $\pm$ 0.007} & 0.754 $\pm$ 0.008 & \textbf{0.717 $\pm$ 0.010} \\
+		\textbf{A,S} & $0.634 \pm 0.007$ & $0.590 \pm 0.007$ & \textbf{0.774 $\pm$ 0.004} & $0.757 \pm 0.008$ & & \textbf{0.791 $\pm$ 0.008} & \textbf{0.747 $\pm$ 0.007} & 0.718 $\pm$ 0.008 & 0.771 $\pm$ 0.010 \\
+		\textbf{S,D} & $0.698 \pm 0.007$ & $0.598 \pm 0.007$ & \textbf{0.768 $\pm$ 0.004} & $0.779 \pm 0.009$ & & \textbf{0.829 $\pm$ 0.007} & \textbf{0.758 $\pm$ 0.005} & 0.715 $\pm$ 0.005 & 0.800 $\pm$ 0.010 \\
+		\textbf{D,T} & $0.710 \pm 0.007$ & $0.631 \pm 0.006$ & $0.768 \pm 0.004$ & $0.659 \pm 0.009$ & & \textbf{0.790 $\pm$ 0.008} & \textbf{0.777 $\pm$ 0.007} & 0.736 $\pm$ 0.008 & \textbf{0.726 $\pm$ 0.009} \\
+		\textbf{S,T} & $0.710 \pm 0.007$ & $0.702 \pm 0.008$ & $0.741 \pm 0.007$ & $0.698 \pm 0.009$ & & \textbf{0.778 $\pm$ 0.008} & \textbf{0.791 $\pm$ 0.006} & 0.701 $\pm$ 0.007 & \textbf{0.782 $\pm$ 0.010} \\
+		\textbf{A,D} & $0.693 \pm 0.002$ & $0.637 \pm 0.006$ & $0.828 \pm 0.005$ & \textbf{0.830 $\pm$ 0.008} & & \textbf{0.825 $\pm$ 0.008} & \textbf{0.822 $\pm$ 0.006} & 0.820 $\pm$ 0.008 & 0.777 $\pm$ 0.010 \\ \hline
+		\textbf{A,S,T} & $0.599 \pm 0.007$ & $0.558 \pm 0.007$ & $0.686 \pm 0.007$ & $0.580 \pm 0.008$ & & \textbf{0.655 $\pm$ 0.008} & \textbf{0.727 $\pm$ 0.006} & 0.683 $\pm$ 0.008 & \textbf{0.632 $\pm$ 0.010} \\
+		\textbf{A,S,D} & $0.627 \pm 0.007$ & $0.573 \pm 0.007$ & \textbf{0.761 $\pm$ 0.004} & $0.734 \pm 0.009$ & & \textbf{0.733 $\pm$ 0.008} & \textbf{0.737 $\pm$ 0.006} & 0.697 $\pm$ 0.008 & 0.740 $\pm$ 0.010 \\
+		\textbf{A,D,T} & $0.653 \pm 0.007$ & $0.615 \pm 0.006$ & $0.756 \pm 0.007$ & $0.612 \pm 0.008$ & & \textbf{0.715 $\pm$ 0.008} & \textbf{0.731 $\pm$ 0.006} & 0.731 $\pm$ 0.007 & \textbf{0.685 $\pm$ 0.010} \\
+		\textbf{S,D,T} & $0.611 \pm 0.007$ & $0.569 \pm 0.007$ & \textbf{0.690 $\pm$ 0.007} & $0.597 \pm 0.008$ & & 0.652 $\pm$ 0.008 & \textbf{0.734 $\pm$ 0.007} & 0.632 $\pm$ 0.008 & 0.635 $\pm$ 0.010 \\ \hline
+		\textbf{A,S,D,T} & $0.584 \pm 0.007$ & $0.548 \pm 0.007$ & $0.601 \pm 0.007$ & $0.571 \pm 0.008$ & & \textbf{0.607 $\pm$ 0.008} & \textbf{0.718 $\pm$ 0.006} & 0.626 $\pm$ 0.008 & 0.615 $\pm$ 0.010 \\
 	\end{tabular}
 	\end{adjustbox}
 \end{table}
@@ -398,34 +399,37 @@ Another interesting result of Table \ref{tab:inter} is that the intersection of 
 
 \subsection{Jensen Shannon Divergence}
 
-Due to the shortcomings of histogram intersection discussed in Section \ref{sec:fidel} the Jensen Shannon Divergence is also computed for each model. Table \ref{tab:jsd} shows the results of this computation. Note that the Jensen Shannon Divergence does not have an upper bound like the histogram intersection does, however it's result can be interpreted as the amount of information required, in nats, to get from one distribution to another. For completely disparate distributions, the divergence is high, as a large amount of information is required to get from one distribution to the other. Histograms that have a similar probability distribution how a low amount of divergence, as less information is required to get from one distribution to another. Note that the Jensesn Shannon Divergence follows a reverse trend from the histogram intersection. Simply put, lower divergences are better than higher divergences.
+Due to the shortcomings of histogram intersection discussed in Section \ref{sec:fidel} the Jensen Shannon Divergence is also computed for each model. Table \ref{tab:jsd} shows the results of this computation. The minimum divergence for each feature combination is highlighted if the value is at least 0.01 less than the corresponding value for the other model. Additionally, the standard deviation of divergences was computed for each feature combination and target, for both models, using distributions sampled from the generative model.
 
-One of the largest benefits of the Jensen Shannon Divergence is that it imposes a nonlinear penalty based off the difference in histogram probability distributions. Directly applied to each of the models presented here, a large penalty is incurred if the model fails to output a value that occurs with non-zero probability in the ground truth. This benefit is especially apparent for Target IP 10.0.0.100 where the Jensen Shannon Divergence shows a greater improvement 4-tuple results when using the WGAN-GPMI model than the Histogram Intersection does. This will be further highlighted in Section \ref{sec:output} where the number of output modes is shown to double when using the WGAN-GPMI model.
+Note that the Jensen Shannon Divergence does not have an upper bound like the histogram intersection does, however it's result can be interpreted as the amount of information required, in nats, to get from one distribution to another. For completely disparate distributions, the divergence is high, as a large amount of information is required to get from one distribution to the other. Histograms that have a similar probability distribution how a low amount of divergence, as less information is required to get from one distribution to another. Note that the Jensesn Shannon Divergence follows a reverse trend from the histogram intersection. Simply put, lower divergences are better than higher divergences. 
+
+One of the largest benefits of the Jensen Shannon Divergence is that it imposes a nonlinear penalty based off the difference in histogram probability distributions. Directly applied to each of the models presented here, a large penalty is incurred if the model fails to output a value that occurs with non-zero probability in the ground truth. This benefit is especially apparent for Target IP 10.0.0.100 where the Jensen Shannon Divergence shows a greater improvement 4-tuple results when using the WGAN-GPMI model than the Histogram Intersection does. This will be further highlighted in Section \ref{sec:output} where the number of output modes is shown to increase as much as two fold when using the WGAN-GPMI model. 
 
 \begin{table}[!htbp]
 	\caption{Jensen Shannon Divergence (nats) for all Feature Combinations}
 	\label{tab:jsd}
 	\centering
+	\small
 	\begin{adjustbox}{angle=90}
 		\begin{tabular}{l|c|c|c|c|c|c|c|c|c|}
 			\multicolumn{1}{c|}{} & \multicolumn{9}{c|}{\textbf{Victim Machine IP Address}} \\
 			\multicolumn{1}{c|}{} & \multicolumn{4}{c|}{\textbf{WGAN-GP}} &  & \multicolumn{4}{c|}{\textbf{WGAN-GPMI}} \\
 			\multicolumn{1}{c|}{\textbf{Features}} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} & \textbf{} & \textbf{10.0.0.100} & \textbf{10.0.0.27} & \textbf{10.0.0.22} & \textbf{10.0.99.143} \\ \hline
-			\textbf{A} & 0.111 $\pm$ 0.0022& 0.088 $\pm$ 0.0027 & 0.033 $\pm$ 0.0017 & 0.024 $\pm$ 0.0021 &  & \textbf{0.017 $\pm$ 0.0014} & \textbf{0.031 $\pm$ 0.0017} & 0.031  $\pm$ 0.0017 & 0.033 $\pm$ 0.0024 \\
-			\textbf{D} & 0.052 $\pm$ 0.0021& 0.086 $\pm$ 0.0028 & 0.032 $\pm$ 0.0017 & 0.012 $\pm$ 0.0017 &  & \textbf{0.006 $\pm$ 0.0010} & \textbf{0.026 $\pm$ 0.0018} & 0.041  $\pm$ 0.0020 & 0.021 $\pm$ 0.0022 \\
-			\textbf{S} & 0.085 $\pm$ 0.0018& 0.022 $\pm$ 0.0017 & 0.029 $\pm$ 0.0014 & 0.017 $\pm$ 0.0019 &  & \textbf{0.010 $\pm$ 0.0012} & \textbf{0.014 $\pm$ 0.0013} & 0.037  $\pm$ 0.0024 & 0.011 $\pm$ 0.0016 \\
-			\textbf{T} & 0.049 $\pm$ 0.0019& 0.047 $\pm$ 0.0025 & 0.028 $\pm$ 0.0021 & 0.060 $\pm$ 0.0028 &  & \textbf{0.009 $\pm$ 0.0012} & \textbf{0.030 $\pm$ 0.0020} & 0.019  $\pm$ 0.0017 & \textbf{0.023 $\pm$ 0.0022} \\ \hline
-			\textbf{A,T} & 0.150 $\pm$ 0.0024 & 0.128 $\pm$ 0.0034 & \textbf{0.063 $\pm$ 0.0025} & 0.131 $\pm$ 0.0043 &  & \textbf{0.077 $\pm$ 0.0029} & \textbf{0.067 $\pm$ 0.0026} & 0.080 $\pm$ 0.0029 & \textbf{0.071 $\pm$ 0.0034} \\
-			\textbf{A,S} & 0.145 $\pm$ 0.0019 & 0.150 $\pm$ 0.0034 & 0.070 $\pm$ 0.0023 & 0.071 $\pm$ 0.0033 &  & \textbf{0.059 $\pm$ 0.0026} & \textbf{0.076 $\pm$ 0.0027} & \textbf{0.067 $\pm$ 0.0027 } & 0.063 $\pm$ 0.0032 \\
-			\textbf{S,D} & 0.107 $\pm$ 0.0019 & 0.141 $\pm$ 0.0034 & 0.071 $\pm$ 0.0024 & 0.054 $\pm$ 0.0030 &  & \textbf{0.036 $\pm$ 0.0022} & \textbf{0.063 $\pm$ 0.0026} & 0.078  $\pm$ 0.0027 & \textbf{0.041 $\pm$ 0.0027} \\
-			\textbf{D,T} & 0.121 $\pm$ 0.0026 & 0.126 $\pm$ 0.0033 & \textbf{0.063 $\pm$ 0.0025} & 0.126 $\pm$ 0.0041 &  & \textbf{0.069 $\pm$ 0.0028} & \textbf{0.063 $\pm$ 0.0027} & 0.091  $\pm$ 0.0030 & \textbf{0.063 $\pm$ 0.0027} \\
-			\textbf{S,T} & 0.102 $\pm$ 0.0020 & 0.082 $\pm$ 0.0032 & \textbf{0.073 $\pm$ 0.0027} & 0.077 $\pm$ 0.0033 &  & \textbf{0.049 $\pm$ 0.0024} & \textbf{0.053 $\pm$ 0.0026} & 0.096  $\pm$ 0.0035 & \textbf{0.039 $\pm$ 0.0034} \\
-			\textbf{A,D} & 0.142 $\pm$ 0.0024 & 0.110 $\pm$ 0.0034 & 0.044 $\pm$ 0.0020 & 0.054 $\pm$ 0.0029 &  & \textbf{0.060 $\pm$ 0.0026} & \textbf{0.050 $\pm$ 0.0022} & 0.047  $\pm$ 0.0022 & 0.055 $\pm$ 0.0028 \\ \hline
-			\textbf{A,S,T} & 0.189 $\pm$ 0.0024 & 0.181 $\pm$ 0.0038 & \textbf{0.119 $\pm$ 0.0031} & 0.193 $\pm$ 0.0049 &  & \textbf{0.146 $\pm$ 0.0037} & \textbf{0.110 $\pm$ 0.0032} & 0.158  $\pm$ 0.0040 & \textbf{0.136 $\pm$ 0.0044} \\
-			\textbf{A,S,D} & 0.173 $\pm$ 0.0023 & 0.169 $\pm$ 0.0036 & 0.080 $\pm$ 0.0025 & 0.100 $\pm$ 0.0037 &  & \textbf{0.102 $\pm$ 0.0032} & \textbf{0.092 $\pm$ 0.0027} & 0.081  $\pm$ 0.0030 & \textbf{0.082 $\pm$ 0.0035} \\
-			\textbf{A,D,T} & 0.173 $\pm$ 0.0026 & 0.141 $\pm$ 0.0035 & \textbf{0.072 $\pm$ 0.0027} & 0.157 $\pm$ 0.0045 &  & \textbf{0.113 $\pm$ 0.0038} & \textbf{0.081 $\pm$ 0.0033} & 0.095  $\pm$ 0.0041 & \textbf{0.090 $\pm$ 0.0044} \\
-			\textbf{S,D,T} & 0.174 $\pm$ 0.0029 & 0.178 $\pm$ 0.0038 & \textbf{0.114 $\pm$ 0.0031} & 0.197 $\pm$ 0.0049 &  & \textbf{0.141 $\pm$ 0.0034} & \textbf{0.106 $\pm$ 0.0028} & 0.160  $\pm$ 0.0031 & \textbf{0.132 $\pm$ 0.0038} \\ \hline
-			\textbf{A,S,D,T} & 0.209 $\pm$ 0.0027 & 0.194 $\pm$ 0.0039 & \textbf{0.121 $\pm$ 0.0031} & 0.213 $\pm$ 0.0050 &  & \textbf{0.178 $\pm$ 0.0040} & \textbf{0.122 $\pm$ 0.0034} & 0.164  $\pm$ 0.0041 & \textbf{0.150 $\pm$ 0.0046} \\
+			\textbf{A} & 0.111 $\pm$ 0.0022& 0.088 $\pm$ 0.003 & 0.033 $\pm$ 0.002 & 0.024 $\pm$ 0.002 &  & \textbf{0.017 $\pm$ 0.001} & \textbf{0.031 $\pm$ 0.002} & 0.031  $\pm$ 0.002 & 0.033 $\pm$ 0.002 \\
+			\textbf{D} & 0.052 $\pm$ 0.0021& 0.086 $\pm$ 0.003 & 0.032 $\pm$ 0.002 & 0.012 $\pm$ 0.002 &  & \textbf{0.006 $\pm$ 0.001} & \textbf{0.026 $\pm$ 0.002} & 0.041  $\pm$ 0.002 & 0.021 $\pm$ 0.002 \\
+			\textbf{S} & 0.085 $\pm$ 0.0018& 0.022 $\pm$ 0.002 & 0.029 $\pm$ 0.001 & 0.017 $\pm$ 0.002 &  & \textbf{0.010 $\pm$ 0.001} & \textbf{0.014 $\pm$ 0.001} & 0.037  $\pm$ 0.002 & 0.011 $\pm$ 0.002 \\
+			\textbf{T} & 0.049 $\pm$ 0.0019& 0.047 $\pm$ 0.003 & 0.028 $\pm$ 0.002 & 0.060 $\pm$ 0.003 &  & \textbf{0.009 $\pm$ 0.001} & \textbf{0.030 $\pm$ 0.002} & 0.019  $\pm$ 0.002 & \textbf{0.023 $\pm$ 0.002} \\ \hline
+			\textbf{A,T} & 0.150 $\pm$ 0.002 & 0.128 $\pm$ 0.003 & \textbf{0.063 $\pm$ 0.003} & 0.131 $\pm$ 0.004 &  & \textbf{0.077 $\pm$ 0.003} & \textbf{0.067 $\pm$ 0.003} & 0.080 $\pm$ 0.003 & \textbf{0.071 $\pm$ 0.003} \\
+			\textbf{A,S} & 0.145 $\pm$ 0.002 & 0.150 $\pm$ 0.003 & 0.070 $\pm$ 0.002 & 0.071 $\pm$ 0.003 &  & \textbf{0.059 $\pm$ 0.003} & \textbf{0.076 $\pm$ 0.003} & \textbf{0.067 $\pm$ 0.003 } & 0.063 $\pm$ 0.003 \\
+			\textbf{S,D} & 0.107 $\pm$ 0.002 & 0.141 $\pm$ 0.003 & 0.071 $\pm$ 0.002 & 0.054 $\pm$ 0.003 &  & \textbf{0.036 $\pm$ 0.002} & \textbf{0.063 $\pm$ 0.003} & 0.078  $\pm$ 0.003 & \textbf{0.041 $\pm$ 0.003} \\
+			\textbf{D,T} & 0.121 $\pm$ 0.002 & 0.126 $\pm$ 0.003 & \textbf{0.063 $\pm$ 0.003} & 0.126 $\pm$ 0.004 &  & \textbf{0.069 $\pm$ 0.003} & \textbf{0.063 $\pm$ 0.003} & 0.091  $\pm$ 0.003 & \textbf{0.063 $\pm$ 0.003} \\
+			\textbf{S,T} & 0.102 $\pm$ 0.002 & 0.082 $\pm$ 0.003 & \textbf{0.073 $\pm$ 0.003} & 0.077 $\pm$ 0.003 &  & \textbf{0.049 $\pm$ 0.002} & \textbf{0.053 $\pm$ 0.003} & 0.096  $\pm$ 0.004 & \textbf{0.039 $\pm$ 0.003} \\
+			\textbf{A,D} & 0.142 $\pm$ 0.002 & 0.110 $\pm$ 0.003 & 0.044 $\pm$ 0.002 & 0.054 $\pm$ 0.003 &  & \textbf{0.060 $\pm$ 0.003} & \textbf{0.050 $\pm$ 0.002} & 0.047  $\pm$ 0.002 & 0.055 $\pm$ 0.003 \\ \hline
+			\textbf{A,S,T} & 0.189 $\pm$ 0.002 & 0.181 $\pm$ 0.004 & \textbf{0.119 $\pm$ 0.003} & 0.193 $\pm$ 0.005 &  & \textbf{0.146 $\pm$ 0.004} & \textbf{0.110 $\pm$ 0.003} & 0.158  $\pm$ 0.004 & \textbf{0.136 $\pm$ 0.004} \\
+			\textbf{A,S,D} & 0.173 $\pm$ 0.002 & 0.169 $\pm$ 0.004 & 0.080 $\pm$ 0.003 & 0.100 $\pm$ 0.004 &  & \textbf{0.102 $\pm$ 0.003} & \textbf{0.092 $\pm$ 0.003} & 0.081  $\pm$ 0.003 & \textbf{0.082 $\pm$ 0.004} \\
+			\textbf{A,D,T} & 0.173 $\pm$ 0.003 & 0.141 $\pm$ 0.004 & \textbf{0.072 $\pm$ 0.003} & 0.157 $\pm$ 0.004 &  & \textbf{0.113 $\pm$ 0.004} & \textbf{0.081 $\pm$ 0.003} & 0.095  $\pm$ 0.004 & \textbf{0.090 $\pm$ 0.004} \\
+			\textbf{S,D,T} & 0.174 $\pm$ 0.003 & 0.178 $\pm$ 0.004 & \textbf{0.114 $\pm$ 0.003} & 0.197 $\pm$ 0.005 &  & \textbf{0.141 $\pm$ 0.003} & \textbf{0.106 $\pm$ 0.003} & 0.160  $\pm$ 0.003 & \textbf{0.132 $\pm$ 0.004} \\ \hline
+			\textbf{A,S,D,T} & 0.209 $\pm$ 0.003 & 0.194 $\pm$ 0.004 & \textbf{0.121 $\pm$ 0.003} & 0.213 $\pm$ 0.005 &  & \textbf{0.178 $\pm$ 0.004} & \textbf{0.122 $\pm$ 0.003} & 0.164  $\pm$ 0.004 & \textbf{0.150 $\pm$ 0.005} \\
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
