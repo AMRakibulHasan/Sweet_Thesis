@@ -4,7 +4,7 @@
 
 This work shows the potential for using Generative Adversarial Networks as a means to generate artificial network intrusion detection alerts. Given the stochastic nature of alerts, rarity of known malicious samples, and rapidly growing need for alert data to train Machine Learning algorithms, GANs provide a means to create alerts that traditional statistic models cannot compare to.  
 
-Additionally, two intuitive metrics are defined for analyzing alert generation fidelity; histogram intersection and Jensen Shannon Divergence. Direct visualization of the histogram intersection illustrates the model's output distribution across m-tuple combinations of features, showing the intricacy of learning to output realistic alert data. Jensen Shannon Divergence is employed to confirm relationships identified by histogram intersection and highlight crucial differences in the probability distribution of the generative model.
+Additionally, two intuitive metrics are defined for analyzing alert generation fidelity; Histogram Intersection and Jensen Shannon Divergence. Direct visualization of the Histogram Intersection illustrates the model's output distribution across m-tuple combinations of features, showing the intricacy of learning to output realistic alert data. Jensen Shannon Divergence is employed to confirm relationships identified by Histogram Intersection and highlight crucial differences in the probability distribution of the generative model.
 
 Using these metrics and information theoretic calculations, feature dependencies are revealed and examined to provide a deeper understanding of both the power and shortcomings of GANs applied to NIDS alert generation. Joint entropy is computed for the ground truth distribution and used as a baseline score identifying the challenge of modeling the data distribution. Then conditional entropy is employed on both the ground truth and generated data distributions to identify feature dependencies and how well the generative network models these dependencies. In order to view low level feature-value dependencies, conditional probability tables are generated and highlighted to show sparsity and determinism. 
 
@@ -12,7 +12,7 @@ Finally, it is shown that using mutual information is an effective means of regu
 
 \section{Future Work}
 
-Though this work shows the promise of GANs in NIDS alert generation the results are far from perfect. Modeling the distribution of alerts is still a monumental challenge for several reasons: The lack of known malicious alert data makes it challenging to train GANs. Current Machine Learning methods in the field of Cyber Security use sequences of alerts in order to model temporal relationships in an attack sequences. And the quality of results requires improvement before being ready for application to other Cyber Security Machine Learning systems.
+Though this work shows the promise of GANs in NIDS alert generation the results are far from perfect. Modeling the distribution of alerts is still a monumental challenge for several reasons: The lack of known malicious alert data makes it challenging to train GANs. Current Machine Learning methods in the field of Cyber Security use sequences of alerts in order to model temporal relationships in an attack sequences. And the quality of results requires improvement before being ready for application to other Cyber Security Machine Learning systems, especially with regards to guiding alert generation to target specific types of attacker behavior. 
 
 \subsection{Multi-Alert Generation and Analysis}
 
@@ -40,10 +40,10 @@ This formulation has the following benefits:
 	\item Encourages a generator which captures inter-feature dependencies during training
 	\item Can be trained without the discriminator network, lowering the potential intractability of complex networks
 	\begin{itemize}
-		\item Note that this comes at the expense of a loss funciton with O(n!) runtime, arguably intractible for actions with a high rank
+		\item Note that this comes at the expense of a loss function with O(n!) runtime, arguably intractible for actions with a high rank
 	\end{itemize}
 	\item Can be modified to target only a specific combination of features
-	\item Increases reward size non-linearly to as to acccount for the significant difficulty increase in getting n-many tuples correct.
+	\item Increases reward size non-linearly to as to account for the significant difficulty increase in getting n-many tuples correct.
 \end{enumerate}
 
 Another benefit of formulating loss in this manner is that it allows for easy expandability. Two examples are as follows: 
@@ -52,22 +52,22 @@ Another benefit of formulating loss in this manner is that it allows for easy ex
 	\item The loss may be modeled as a n-th order Markov Source to capture temporal structure within the data. 
 \end{enumerate}
 
-The probability mass function for cyberattack data does not follow any conventional distribution (Normal, Poisson, Uniform, etc), nor does it account for all possible features in the 'Alert Space' [Explain this]. In order to account for this in the loss function each feature predicted that is in the Alert Space would have a weighted reward value by the probability of that feature value occurring as shown below: Let F be a subset of features from the Alert Space A and $F_v$ represents a specific value for the Feature f
+In order to account for the distribution of alert feature combinations in the loss function, each feature predicted that is in the Alert Space would have a weighted reward value by the probability of that feature value occurring as shown below: Let F be a subset of features from the Alert Space A and $F_v$ represents a specific value for the feature (f). Then weight the loss of the generated sample by the probability $p_{v_n}$ of that specific feature value combination occurring. 
+
 \begin{gather}
 p_{v_n} = {|F_{v_n}| \over |F_n|}\\
 L = \sum_{k=1}^{n}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} (2^k)p(v_1)
 \end{gather}
 
+This can be further expanded to account for the impact of other features on the target prediction feature. Conceptually, if trying to compute the loss of feature A given feature B as a prior, the conditional probability of A may be computed. This would further encourage inter-feature dependency as the loss function would account for decreases in the entropy of one feature value given another.
 
-This can be further expanded to account for the inpact of other features on the target prediction feature. Conceptually, if trying to compute the loss of feature A given feature B as a prior, the conditional probability of A may be computed. This would further encourage inter-feature dependency. 
-
-An example of this would be computing the probability of a specific value for Destination Port given that the value for IP is already determined to be 129.21.154.3. On the other hand, it is still important to value results which occur in the global action space even if they don't occur with the specific IP value given; the intuition behind this is that the generated should also be encouraged to explore the action space, not just exploit it. To do this the joint probability should be used with the naive probability proposed above. 
+An example of this would be computing the probability of a specific value for Alert Signature given a specific Destination Service value. The number of possible alert signatures is greatly reduced based on the vulnerabilities in the targeted Destination Service. On the other hand, it is still important to value results which occur in the global action space even if they don't occur with the specific IP value given; the intuition behind this is that the generated should also be encouraged to explore the action space, not just exploit it. To do this the joint probability should be considered equally with the naive probability proposed above. 
 
 \begin{gather}
 L = \sum_{k=1}^{n-1}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} (2^k)p(v_1) + \sum_{k=1}^{n-1}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} (2^k)p(v_1|v_2)
 \end{gather}
 
-Such a conditional probability model can also be used to model temporal relations within the data. This is accomplished by using the previous alerts feature value as a prior for the current generated feature. This in turn can be extended to an n-th order markov model where n alert features act as priors for the current feature being generated. This may be represented as shown below:
+Such a conditional probability model can also be used to model temporal relations within the data. This is accomplished by using the previous alerts feature value as a prior for the current generated feature. This in turn can be extended to an n-th order markov model where n previous alerts act as priors for the current alert being generated. This may be represented as shown below:
 
 \begin{gather}
 L =  \sum_{k=1}^{n-1}\sum_{s_{{(^n_k)}} \in A_{(^n_k)}} (2^k)p(v_1|v_2, v_3, ..., v_n))

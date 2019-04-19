@@ -23,7 +23,7 @@ When selecting features of an alert to use for any model it is important to cons
 
 \section{GAN Models}
 \label{sec:model_arch}
-Two GAN implementations were created to generate artificial cyber alert data; a standard Wasserstein GAN with Gradient Penalty and an extension of this model which used a neural estimate of mutual information to regularize the generator output.  
+Two GAN implementations were created to generate artificial cyber alert data; a standard Wasserstein GAN with Gradient Penalty and an extension of this model which used a neural estimate of mutual information to regularize the generator output. The mutual information estimate model architecture is also reviewed in detail.
 
 \subsection{Wasserstein GAN with Gradient Penalty}
 \label{sec:gan}
@@ -31,9 +31,9 @@ The Wasserstein GAN with Gradient Penalty makes no architectural changes to mode
 
 Since the goal of this work was to create individual NIDS alerts without temporal correlation a feed-forward network architecture was selected for both the generator and discriminator. Four alert features were selected for alert generation: Alert Signature, Destination Port, Timestamp, and Source IP. Despite this, the models employed could easily be scaled to consider n-many features. 
 
-The generator consisted of 2 layers. The first layer sampled from noise space $\mathbb{Z}$ to a hidden representation. The next layer was directly responsible for each feature's output value. Since each of the four selected features was categorical one hot encoded representations were used to represent each unique value. This layer consisted of four individual mappings from the hidden representation to an output layer with cardinality equal to the number of unique values per feature. Finally, a concatenation was used to take the prior 4 outputs and create a full 1-hot encoded alert. 
+The generator consisted of 2 layers. The first layer sampled from noise space $\mathbb{Z}$ to a hidden representation. The next layer was directly responsible for each feature's output value. Since each of the four selected features was categorical, one hot encoded representations were used to represent each unique value. This layer consisted of four individual mappings from the hidden representation to an output layer with cardinality equal to the number of unique values per feature. Finally, a concatenation was used to take the prior 4 outputs and create a full 1-hot encoded alert. 
 
-The discriminator also consisted of 2 layers. The first layer took 1-hot encoded alerts as input and mapped them to a hidden representation. The next layer mapped this hidden representation to a scalar value representing the probability that the alert was from the ground truth dataset. A graphical model is included in Fig. \ref{fig:model_simple}. Inputs to the network are highlighted in yellow. Learnable weight layers are in blue. The concatenation in orange is a non-backpropable layer used only to prepare generator output for input to the discriminator. The red boxes and lines represent the model loss functions and back-propagation.
+The discriminator also consisted of 2 layers. The first layer took 1-hot encoded alerts as input and mapped them to a hidden representation. The next layer mapped this hidden representation to a scalar value representing the probability that the alert was from the ground truth dataset. A graphical model of this architecture is included in Fig. \ref{fig:model_simple}. Inputs to the network are highlighted in yellow. Learnable weight layers are in blue. The concatenation in orange is a non-backpropable layer used only to prepare generator output for input to the discriminator. And the red boxes and lines represent the model loss functions and back-propagation.
 
 \begin{figure}[!htbp]
 	\centering%
@@ -48,12 +48,12 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 	\centering
 	\caption{Generator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
 	\label{tab:model_simple_a}
-	\begin{tabular}{l|l|l}
+	\begin{tabular}{l|c|c}
 		\hline
 		\multicolumn{3}{c}{\textbf{Generator}} \\ 
 		\hline
 		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
-		Input & 64 x 128 & ReLu \\
+		Input & 64 x 128 & {$x^+$} \\
 		Output - Feature 0 & 128 x A & NA \\
 		Output - Feature 1 & 128 x B & NA \\
 		Output - Feature 2 & 128 x C & NA \\
@@ -67,13 +67,13 @@ Table \ref{tab:model_simple_a} and Table \ref{tab:model_simple_b}, shows the dim
 	\centering
 	\caption{Discriminator Network Architecture: Note that a-d are variable depending on the number of unique outputs}
 	\label{tab:model_simple_b}
-	\begin{tabular}{l|l|l}
+	\begin{tabular}{l|c|c}
 		\hline
 		\multicolumn{3}{c}{\textbf{Discriminator}} \\ 
 		\hline
 		\multicolumn{1}{c|}{Layer} & \multicolumn{1}{c|}{Matrix Dimensions} & \multicolumn{1}{c}{Activation Function} \\ \hline
-		Input & A+B+C+D x 128 & ReLu \\
-		Output & 128 x 1 & Sigmoid \\
+		Input & A+B+C+D x 128 & {$x^+$} \\
+		Output & 128 x 1 & {$1 \over {1+e^{-x}}$} \\
 		\hline
 	\end{tabular}
 \end{table}
@@ -106,7 +106,7 @@ A feed forward neural network was implemented to learn the mutual information be
 \subsection{WGAN-GP with Mutual Information Constraint}
 \label{sec:gpmi}
 
-In order to improve mode dropping in the GAN model described in Section \ref{sec:gan} the mutual information neural estimator in Section \ref{sec:mine} is added to the model. This is done by using the mutual information between the generated samples and the input noise as a proxy for the neg-entropy of the samples. This regularizes the generator's weights and encourages full exploration of the feature space. We refer to this model as the Wasserstein GAN with Gradient Penalty and Mutual Information (WGAN-GPMI). Fig. \ref{fig:model_complex} shows what the full model consists of. The addition of the Mutual Information Estimation Network helps to enforce that the generator must learn all output modes of the distribution by fully exploiting the noise sample.
+In order to improve mode dropping in the GAN model described in Section \ref{sec:gan} the Mutual Information Neural Estimator in Section \ref{sec:mine} is added to the WGAN-GP model. This is done by using the mutual information between the generated samples and the input noise as a proxy for the neg-entropy of the samples. This regularizes the generator's weights and encourages full exploration of the feature space. We refer to this model as the Wasserstein GAN with Gradient Penalty and Mutual Information (WGAN-GPMI). Fig. \ref{fig:model_complex} shows what the full model consists of. The addition of the Mutual Information Estimation Network helps to enforce that the generator must learn all output modes of the distribution by fully exploiting the noise sample.
 
 \begin{figure}[!htbp]
 	\centering%

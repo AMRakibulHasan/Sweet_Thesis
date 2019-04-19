@@ -25,7 +25,7 @@
 	
 	One additional way to confirm the dependencies highlighted through drop in histogram intersection and conditional entropy is to test with a simple model for separation. To do so, a SVM with the RBF Kernel function was trained using all unique permutations of features. The model was given 1 to $n-1$ features as conditioners and an expected output feature for all possible input-output pairs. 
 	
-	To further prove that the dependencies identified by the GAN exist, a SVM was fit to the same $1|2$-combination histograms discussed in Fig. BLANK. The accuracy of this fit was tabulated for all four victim IP addresses tested in Table \ref{table:svm_accuracy}.
+	To further prove that the dependencies identified by the GAN exist, a SVM was fit to the $1|2$-combination distributions for each of the target machines from the CPTC'17 dataset. The accuracy of this fit was tabulated for all four victim IP addresses tested in Table \ref{table:svm_accuracy}.
 	
 	\begin{table}[!htbp]
 		\caption{SVM Prediction Accuracy For 3-Combination Feature Values Assorted Victim IPs}
@@ -115,5 +115,12 @@
 		}
 		\label{fig:alert_depend_8}
 	\end{figure}
+
+	\chapter{Alert Dependency Plots}
+	\label{sec:iana_app}
+	The Common Port Services listing provided by IANA is available at the following url:
+	\href{https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml}{https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml}
+	Note that these mappings are periodically updated and are only common mappings/suggestions. Individual corporations may opt to configure their own service mapping. 
+
 
 \end{appendices}

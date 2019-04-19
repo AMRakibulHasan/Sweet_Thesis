@@ -4,11 +4,11 @@
 Each of the GAN models described in Section \ref{sec:model_arch} were used to create artificial NIDS alert data.  Using the methods described in Section \ref{sec:anal} the fidelity of the learned model was analyzed. This analysis can be broken down into the following sections:
 
 \begin{enumerate}
-	\item Thorough Hyperparameter Search - Individual hyperparameters were tuned for each model to see their impact on histogram intersection. Top candidate values were selected for a full hyperparameter search where all combinations of hyperparameter values were tested. The results are presented for both WGAN-GP and the improved WGAN-GPMI.
+	\item Thorough Hyperparameter Search - Individual hyperparameters were tuned for each model to see their impact on Histogram Intersection. Top candidate values were selected for a full hyperparameter search where all combinations of hyperparameter values were tested. The results are presented for both WGAN-GP and the improved WGAN-GPMI.
 
-	\item Alert Fidelity - A subset of target IPs from the CPTC'17 dataset were used for training WGAN-GP and WGAN-GPMI models. The results of these models were analyzed and visualized using Histogram Intersection and Jensen-Shannon Divergence.
+	\item Alert Fidelity - A subset of target IPs from the CPTC'17 dataset were used for training WGAN-GP and WGAN-GPMI models. The results of these models were analyzed and visualized using histogram intersection and Jensen-Shannon Divergence.
 
-	\item Alert Dependency - For the same subset of target IPs alert dependencies were identified by using drop in histogram intersection, entropy computation, and conditional probability tables.
+	\item Alert Dependency - For the same subset of target IPs alert dependencies were identified by using drop in Histogram Intersection, entropy computation, and conditional probability tables.
 
 	\item Output Modes Captured - The number of output modes captured by the model is comprised of two components. How many of the true output modes are output by the model? And how many output modes by the model do not occur in the ground truth?
 
@@ -56,13 +56,15 @@ These targets were also selected because of the characteristics of their alert d
 			Target IP 10.0.0.27
 		}
 	\end{subfigure}%
-	\caption{Differences in Distribution of Alerts Between Varying Target IPs}
+	\caption{Differences in Distribution of 4 Alert Feature Combination Between Varying Target IPs}
 	\label{fig:histograms}
 \end{figure}
 
+Though there is no direct weighting applied to the results of each feature combination the importance of each feature generated does play a role in how realistic the alert seemed. For example, generating realistic alert signatures provides directly actionable information regarding what types of attacks or vulnerabilities are targeted on the given source. However, this information becomes much more useful when paired with a realistic destination service. Later on, the results will show that the models presented by this work are capable of learning these useful feature value combinations.
+
 \section{Thorough Hyperparameter Search}
 \label{sec:search}
-A two part hyperparameter search was employed to find optimal values for generating alerts from the CTPC datasets. First, individual parameters were tested in order to find several values which resulted in promising results. For each parameter value tested, the histogram intersection was computed for all possible feature-value combinations. These values were then plotted against all other parameter setting results for WGAN-GP and WGAN-GPMI. To save space in the plots each feature combination was assigned a numeric key. Table \ref{tab:key} provides the key mapping to each potential feature combination.
+A two part hyperparameter search was employed to find optimal values for generating alerts from the CTPC datasets. First, individual parameters were tested in order to find several values which showed promising results when applying the Histogram Intersection metric. For each parameter value tested, the Histogram Intersection was computed for all possible feature-value combinations. These values were then plotted against all other parameter setting results for WGAN-GP and WGAN-GPMI. To save space in the plots each feature combination was assigned a numeric key. Table \ref{tab:key} provides the key mapping to each potential feature combination.
 
 \begin{table}[!htbp]
 	\caption{Key for Feature Combinations}
@@ -188,7 +190,7 @@ The values tested for learning rate were $\{1e-5, 5e-5, 1e-4, 5e-4, 1e-3\}$. The
 	\caption{Learning Rate Parameter Search}
 \end{figure}
 
-For both of the models tested, the smallest learning rate $1e-5$ performs poorly. Interestingly, in the WGAN-GP model the subsequent three learning rates $\{5e-5,1e-4,5e-4\}$ oscillate between performing well and poorly. due to this oscillations $1e-4$ is dropped, leaving $\{5e-5,5e-4,1e-3\}$ for the full parameter search. For the WGAN-GPMI model $\{1e-4, 5e-4, 1e-3\}$ are all used in the full parameter test.
+For both of the models tested, the smallest learning rate $1e-5$ performs poorly. Interestingly, in the WGAN-GP model the subsequent three learning rates $\{5e-5,1e-4,5e-4\}$ oscillate between performing well and poorly. due to this oscillation, $1e-4$ is dropped, leaving $\{5e-5,5e-4,1e-3\}$ for the full parameter search. For the WGAN-GPMI model $\{1e-4, 5e-4, 1e-3\}$ are all used in the full parameter test.
 
 
 \subsection{Hidden Dimension}
@@ -223,7 +225,7 @@ The values tested for hidden dimension were $\{64, 128, 256, 384, 512\}$. The in
 \end{figure}
 
 
-The range of histogram intersection scores for the hidden parameter search is far smaller than the other hyperparameters. For the WGAN-GP model $\{128, 256, 384\}$ had the highest intersection scores, while $\{64,128,256\}$ performed well for the WGAN-GPMI model.
+The range of Histogram Intersection scores for the hidden parameter search is far smaller than the other hyperparameters. For the WGAN-GP model $\{128, 256, 384\}$ had the highest intersection scores, while $\{64,128,256\}$ performed well for the WGAN-GPMI model.
 
 
 \subsection{Epochs}
@@ -344,9 +346,9 @@ Two metrics were employed in order to identify the fidelity of alert generation.
 \subsection{Histogram Intersection}
 \label{sec:inter}
 
-The histogram intersection was computed for all feature combinations across all 4 IP addresses tested. For each IP, all possible combinations of features were analyzed. This resulted in 4 intersections representing the individual features, 6 representing pairs of features, 4 representing 3-tuples, and a single histogram representing 4-tuple combinations.
+The Histogram Intersection was computed for all feature combinations across all 4 IP addresses tested. For each IP, all possible combinations of features were analyzed. This resulted in 4 intersections representing the individual features, 6 representing pairs of features, 4 representing 3-tuples, and a single histogram representing 4-tuple combinations.
 
-Fig. \ref{fig:inter} steps through these levels of combinations for target 10.0.0.100. The top left plot shows the intersection of Time Bins. The top right plot shows the histogram combination of Time Bins and Destination Service. The bottom right adds the Alert Signature feature to the histogram. And finally, the bottom right shows all 4 features under test as a single joint histogram. It is important to note that as the number of features considered in the combination increases so does the complexity of recreating the data with high fidelity; individual occurrences of features drops, while the number of unique features to output rises.
+Fig. \ref{fig:inter} steps through these levels of combinations for target 10.0.0.100. The top left plot shows the intersection of Time Bins. The top right plot shows the histogram combination of Time Bins and Destination Service. The bottom right adds the Alert Signature feature to the histogram. And finally, the bottom right shows all 4 features under test as a single joint histogram. It is important to note that as the number of features considered in the combination increases so does the complexity of recreating the data with high fidelity; individual occurrences of features drops, while the number of unique feature values to output rises.
 
 
 \begin{figure}[!htbp]
@@ -358,7 +360,7 @@ Fig. \ref{fig:inter} steps through these levels of combinations for target 10.0.
 	\label{fig:inter}
 \end{figure}
 
-The histogram intersection was used to analyze the fidelity of results from both of the models tested. In general, the WGAN-GPMI is able to outperform the standard WGAN-GP model. This suggests that the mutual information constraint results in a model which manages to emulate the ground truth distribution with a higher degree of accuracy than standard models are. Table \ref{tab:inter} summarizes the results of both models across all 4 target IP addresses. The maximum intersection score for each combination of features is bolded if the given score is at least 0.05 greater than the intersection score of the other model. Additionally, the standard deviation was computed using 1000 unique distributions sampled from the generative model and is shown for each feature combination on each target. 
+The Histogram Intersection was used to analyze the fidelity of results from both of the models tested. In general, the WGAN-GPMI is able to outperform the standard WGAN-GP model. This suggests that the mutual information constraint results in a model which manages to emulate the ground truth distribution with a higher degree of accuracy than standard models are. Table \ref{tab:inter} summarizes the results of both models across all 4 target IP addresses. The maximum intersection score for each combination of features is bolded if the given score is at least 0.05 greater than the intersection score of the other model. Additionally, the standard deviation was computed using 1000 unique distributions sampled from the generative model and is shown for each feature combination on each target. 
 
 \begin{table}[!htbp]
 	\caption{Histogram Intersection for all Feature Combinations}
@@ -389,15 +391,15 @@ The histogram intersection was used to analyze the fidelity of results from both
 	\end{adjustbox}
 \end{table}
 
-It is interesting to note that the effect of the mutual information constraint varies from Target IP address to Target IP address. For example, Target 10.0.0.22 only has small improvements to histogram intersection when using the WGAN-GPMI model. In several cases, such as Source IP and Destination Service, the intersection score actually drops. On the other hand Target IP addresses such as 10.0.0.27 see a large benefit from using the mutual information constraint. On average, the histogram intersection is $14.63$\% higher for the WGAN-GPMI model than it's WGAN-GP counterpart.
+It is interesting to note that the effect of the mutual information constraint varies from Target IP address to Target IP address. For example, Target 10.0.0.22 only has small improvements to Histogram Intersection when using the WGAN-GPMI model. In several cases, such as Source IP and Destination Service, the intersection score actually drops. On the other hand Target IP addresses such as 10.0.0.27 see a large benefit from using the mutual information constraint. On average, the Histogram Intersection is $14.63$\% higher for the WGAN-GPMI model than it's WGAN-GP counterpart. This is result is particularly interesting, as the intent of the mutual information constraint is to improve mode dropping in the generator, not to directly improve Histogram Intersection. It is believed that palliating mode dropping is directly related to increasing Histogram Intersection in many cases because it redistributes output sample entropy across more output values than standard models do when collapsing to a small subset of output values.
 
-Another interesting result of Table \ref{tab:inter} is that the intersection of histograms is resilient to earlier score bias. Consider the intersection score of Timestamp (T) on victim IP 10.0.0.100. This feature has the highest score of any single feature, potentially leading to the fallacious expectation that any combination with T will also score high. When moving to testing 2-tuple combinations such as Timestamp (T) and Alert Signature (A) however the intersection drops significantly. This leads to another interesting observation; the histogram intersection is monotonically decreasing with respect to it's constituent features. Intuitively this makes sense as adding new features to the combination cannot add any more information than what is provided by the constituent features.
+Another interesting result of Table \ref{tab:inter} is that the intersection of histograms is resilient to earlier score bias. Consider the intersection score of Timestamp (T) on victim IP 10.0.0.100. This feature has the highest score of any single feature, potentially leading to the fallacious expectation that any combination with T will also score high. When moving to testing 2-tuple combinations such as Timestamp (T) and Alert Signature (A) however the intersection drops significantly. This leads to another interesting observation; the Histogram Intersection is monotonically decreasing with respect to it's constituent features. Intuitively this makes sense as adding new features to the combination cannot add any more information than what is provided by the constituent features.
 
 \subsection{Jensen Shannon Divergence}
 
-Due to the shortcomings of histogram intersection discussed in Section \ref{sec:fidel} the Jensen Shannon Divergence is also computed for each model. Table \ref{tab:jsd} shows the results of this computation. The minimum divergence for each feature combination is highlighted if the value is at least 0.01 less than the corresponding value for the other model. Additionally, the standard deviation of divergences was computed for each feature combination and target, for both models, using 1000 distributions sampled from the generative model.
+Due to the shortcomings of Histogram Intersection discussed in Section \ref{sec:fidel} the Jensen Shannon Divergence is also computed for each model. Table \ref{tab:jsd} shows the results of this computation. The minimum divergence for each feature combination is highlighted if the value is at least 0.01 less than the corresponding value for the other model. Additionally, the standard deviation of divergences was computed for each feature combination and target, for both models, using 1000 distributions sampled from the generative model.
 
-Note that the Jensen Shannon Divergence does not have an upper bound like the histogram intersection does, however it's result can be interpreted as the amount of information required, in nats, to get from one distribution to another. For disparate distributions, the divergence is high, as a large amount of information is required to get from one distribution to the other. Histograms that have a similar probability distribution have a low amount of divergence, as less information is required to get from one distribution to another. Note that the Jensesn Shannon Divergence follows a reverse trend from the histogram intersection. Simply put, lower divergences are better than higher divergences. 
+Note that the Jensen Shannon Divergence does not have an upper bound like the Histogram Intersection does, however it's result can be interpreted as the amount of information required, in nats, to get from one distribution to another. For disparate distributions, the divergence is high, as a large amount of information is required to get from one distribution to the other. Histograms that have a similar probability distribution have a low amount of divergence, as less information is required to get from one distribution to another; the Jensesn Shannon Divergence follows a reverse trend from the Histogram Intersection.
 
 One of the largest benefits of the Jensen Shannon Divergence is that it imposes a nonlinear penalty based off the difference in histogram probability distributions. Directly applied to each of the models presented here, a large penalty is incurred if the model fails to output a value that occurs with non-zero probability in the ground truth. This benefit is especially apparent for Target IP 10.0.0.100 where the Jensen Shannon Divergence shows a greater improvement for  4-tuple results when using the WGAN-GPMI model than the Histogram Intersection does. This will be further highlighted in Section \ref{sec:output} where the number of output modes is shown to increase as much as two fold when using the WGAN-GPMI model. 
 
@@ -434,11 +436,11 @@ One of the largest benefits of the Jensen Shannon Divergence is that it imposes 
 \section{Alert Dependencies}
 \label{sec:depend}
 
-Interactions between NIDS alert features provide important contextual information about cyber attacks. For example, knowing what machine an attack will occur on can reduce the number of possible attack vectors on that machine. Capturing these feature dependencies is a key aspect of understanding the quality of the generative model. To verify these dependencies the drop in histogram intersection is noted, weighted conditional entropy is computed according to the equations provided by (\ref{eq:wce}) and (\ref{eq:norm_wce}), and joint entropy is computed using (\ref{eq:je}) and (\ref{eq:norm_je}) to provide a baseline. Conditional probability tables are also generated to provide detailed inspection of specific feature value relationships. Appendix \ref{sec:svm_app} contains an alternative method to verifying feature dependency through the usage of a Support Vector Machine. These metrics were all computed for both WGAN-GP and WGAN-GPMI models.
+Interactions between NIDS alert features provide important contextual information about cyber attacks. For example, knowing what machine an attack will occur on can reduce the number of possible attack vectors on that machine. Capturing these feature dependencies is a key aspect of understanding the quality of the generative model. To verify these dependencies the drop in Histogram Intersection is noted, weighted conditional entropy is computed according to the equations provided by (\ref{eq:wce}) and (\ref{eq:norm_wce}), and joint entropy is computed using (\ref{eq:je}) and (\ref{eq:norm_je}) to provide a baseline. Conditional probability tables are also generated to provide detailed inspection of specific feature value relationships. Appendix \ref{sec:svm_app} contains an alternative method to verifying feature dependency through the usage of a Support Vector Machine. These metrics were all computed for both WGAN-GP and WGAN-GPMI models.
 
 \subsection{WGAN-GP Feature Dependency Performance}
 
-By viewing the difference in histogram intersection between $m\pm1$ tuples of features, feature dependencies can be inferred. Large drops indicate a low amount of dependence between the lower levels of feature combinations and the higher level. Small drops when adding a new feature to the joint distribution indicate that there is dependence between the lower level combination and the newly added feature. By applying the graph structure given in Fig. \ref{fig:metric_graph} to NIDS alert features, histogram intersection scores can be noted in nodes of the graph while edges represent conditional and joint entropy. Fig. \ref{fig:alert_depend_1} shows the dependency graph for Target IP 10.0.0.27 from the CPTC'17 dataset. These graphs were constructed for the other three target IPs tested from CPTC '17 and are included in the Appendix \ref{sec:depend_app}
+By viewing the difference in Histogram Intersection between $m\pm1$ tuples of features, feature dependencies can be inferred. Large drops indicate a low amount of dependence between the lower levels of feature combinations and the higher level. Small drops when adding a new feature to the joint distribution indicate that there is dependence between the lower level combination and the newly added feature. By applying the graph structure given in Fig. \ref{fig:metric_graph} to NIDS alert features, Histogram Intersection scores can be noted in nodes of the graph while edges represent conditional and joint entropy. Fig. \ref{fig:alert_depend_1} shows the dependency graph for Target IP 10.0.0.27 from the CPTC'17 dataset. These graphs were constructed for the other three target IPs tested from CPTC '17 and are included in the Appendix \ref{sec:depend_app}
 
 \begin{figure}[!htbp]
 	\centering
@@ -449,11 +451,11 @@ By viewing the difference in histogram intersection between $m\pm1$ tuples of fe
 	\label{fig:alert_depend_1}
 \end{figure}
 
-Stepping through the graph, nodes along the outer edges represent a single feature histogram. The values given are the histogram intersection between the ground truth and generated data distribution. As edges are traversed and meet, they are combined and arrive at the next node as a combination of the features considered. This process continues inwards, adding one more unique feature to each joint distribution, until all four features are considered at once.
+Stepping through the graph, nodes along the outer edges represent a single feature histogram. The values given are the Histogram Intersection between the ground truth and generated data distribution. As edges are traversed and meet, they are combined and arrive at the next node as a combination of the features considered. This process continues inwards, adding one more unique feature to each joint distribution, until all four features are considered at once.
 
 It is important to note that for the 2-tuple combinations there are actually 6 possible distributions, however only 4 may be visualized while maintaining planarity of the graph; the analysis of these values is still included in the conditional and joint probability tables.
 
-In order to highlight drops in intersection score, the following schema was applied to the graph: Lines are color coded such that blue lines indicate feature unions which result in less than 5\% difference between histogram scores. Conversely, lines which are red indicate an difference that is greater than 5\%. Lines which are purple indicate a unidirectional dependence relationship between the feature tuples. This occurs when one feature is a good predictor of another ($<$ 5\% intersection difference) but the opposite is not true ($>$ 5\% intersection difference). Lines which are blue or red exhibit bidirectional dependence; both lines exhibit the same intersection difference. All dashed lines are bounding boxes added to clearly segment the varying $m$-tuple histograms.
+In order to highlight drops in intersection score, the following schema was applied to the graph: Lines are color coded such that blue lines indicate feature unions which result in less than 5\% difference between histogram scores. Conversely, lines which are red indicate a difference that is greater than 5\%. Lines which are purple indicate a unidirectional dependence relationship between the feature tuples. This occurs when one feature is a good predictor of another ($<$ 5\% intersection difference) but the opposite is not true ($>$ 5\% intersection difference). Lines which are blue or red exhibit bidirectional dependence; both lines exhibit the same intersection difference. All dashed lines are bounding boxes added to clearly segment the varying $m$-tuple histograms.
 
 To verify that the graph correctly highlights feature dependencies Table \ref{tab:ce} was computed. This table considers all unique permutations of features for all m-tuples across all 4 target IPs. The conditional entropy is then compared between the ground truth and generated data distributions. Additionally, the joint entropy was computed in Table \ref{tab:je} to provide a baseline representation of the amount of randomness in the feature distributions. This table contains calculations only from 2-tuple, 3-tuple, and 4-tuple combinations as there is no direct comparison to draw between conditional and joint entropy for single feature histograms.
 
@@ -523,7 +525,7 @@ To verify that the graph correctly highlights feature dependencies Table \ref{ta
 	\end{adjustbox}
 \end{table}
 
-Several instances of feature dependency show good agreement between Fig. \ref{fig:alert_depend_1} and Table \ref{tab:ce}. For example, the drop in interesection score between A,S and A,S,T is low and the conditional entropy of the ground truth distribution T{\given}A,S is low.
+Several instances of feature dependency show good agreement between Fig. \ref{fig:alert_depend_1} and Table \ref{tab:ce}. For example, the drop in interesection score between A,S and A,S,T is low and the conditional entropy of the ground truth distribution T{\given}A,S is low. 
 
 To further study specific feature-value relationships between the ground truth and generated data distributions conditional probability tables may be output for each feature permutation. In order to make these tables human-readable the following color schema is applied: cells which have probability 0 are highlighted in red; cells with probability 1 are highlighted in blue. This two step process highlights both the sparsity of output probabilities as well as cases where the input results in a deterministic output. Specific examples of these tables for the ground truth distribution, WGAN-GP generated distribution, and WGAN-GPMI generated distribution will be covered in \ref{sec:gpmi_dep}
 
@@ -532,7 +534,7 @@ To further study specific feature-value relationships between the ground truth a
 
 All of the aforementioned plots and tables were created in duplicate in order to test the effect of Mutual Information maximization on the model's ability to capture feature dependencies.
 
-First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was applied to the histogram intersection scores of the WGAN-GPMI model in Fig. \ref{fig:alert_depend_5}. Similar to the WGAN-GP model results, Appendix \ref{sec:depend_app} contains the results for the other three target IP addresses tested. Note that from this figure alone it is impossible to make a claim that feature dependencies are more fully captured by the WGAN-GPMI model. However by computing the conditional entropy in Table \ref{tab:ce2} it is apparent that the WGAN-GPMI model more closely imitates the entropy of the ground truth. In fact, several of the small valued m-tuples such as A{\given}T, T{\given}D, and D{\given}S,T all have identical conditional entropy values to the ground truth distribution.
+First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was applied to the histogram intersection scores of the WGAN-GPMI model in Fig. \ref{fig:alert_depend_5}. Similar to the WGAN-GP model results, Appendix \ref{sec:depend_app} contains the results for the other three target IP addresses tested. Note that from this figure alone it is impossible to make a claim that feature dependencies are more fully captured by the WGAN-GPMI model. However by computing the conditional entropy in Table \ref{tab:ce2} it is apparent that the WGAN-GPMI model more closely imitates the entropy of the ground truth. In fact, several of the small valued m-tuples such as A{\given}T, T{\given}D, and D{\given}S,T all have identical conditional entropy values to the ground truth distribution. Additionally, values that are within 10\% of the higher entropy value are highlighted.  
 
 \begin{figure}[!htbp]
 	\centering
@@ -555,13 +557,13 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 			\multicolumn{1}{l|}{\textbf{A{\given}T}} & \textbf{0.244} & \textbf{0.238} & \textbf{0.153} & \textbf{0.333} &  & \textbf{0.244} & \textbf{0.238} & \textbf{0.153} & \textbf{0.334} \\
 			\multicolumn{1}{l|}{\textbf{T{\given}S}} & \textbf{0.593} & \textbf{0.463} & \textbf{0.515} & \textbf{0.695} &  & \textbf{0.593} & \textbf{0.463} & \textbf{0.516} & \textbf{0.695} \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A}} & \textbf{0.330} & \textbf{0.339} & \textbf{0.695} & \textbf{0.246} &  & \textbf{0.330} & \textbf{0.339} & \textbf{0.695} & \textbf{0.246} \\
-			\multicolumn{1}{l|}{\textbf{S{\given}T}} & 0.262 & 0.252 & 0.263 & 0.405 &  & 0.263	& 0.186	& 0.252	& 0.406 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}T}} & \textbf{0.262} & 0.252 & \textbf{0.263} & \textbf{0.405} &  & \textbf{0.263}	& 0.186	& \textbf{0.252}	& \textbf{0.406} \\
 			\multicolumn{1}{l|}{\textbf{S{\given}A}} & 0.800 & 0.752 & 0.831 & 0.711 &  & 0.229	& 0.239	& 0.526	& 0.222 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}S}} & 0.346 & 0.445 & 0.253 & 0.278 &  & 0.509	& 0.385	& 0.207	& 0.558 \\
 			\multicolumn{1}{l|}{\textbf{A{\given}D}} & 0.080 & 0.222 & 0.070 & 0.288 &  & 0.149	& 0.026	& 0.007	& 0.097 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}D}} & \textbf{0.479} & \textbf{0.346} & \textbf{0.655} & \textbf{0.383} &  & \textbf{0.479} & \textbf{0.346} & \textbf{0.655} & \textbf{0.383} \\
 			\multicolumn{1}{l|}{\textbf{D{\given}T}} & \textbf{0.287} & \textbf{0.234} & \textbf{0.152} & \textbf{0.379} &  & \textbf{0.287} & \textbf{0.234} & \textbf{0.152} & \textbf{0.379} \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & 0.385 & 0.271 & 0.475 &  & 0.403	& 0.376	& 0.214	& 0.543 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S}} & 0.346 & \textbf{0.385} & 0.271 & 0.475 &  & 0.403	& \textbf{0.376}	& 0.214	& 0.543 \\
 			\multicolumn{1}{l|}{\textbf{S{\given}D}} & 0.822 & 0.779 & 0.856 & 0.785 &  & 0.436	& 0.260	& 0.474	& 0.301 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A}} & 0.006 & 0.246 & 0.006 & 0.016 &  & 0.055	& 0.009	& 0.048	& 0.000 \\ \hline
 			\multicolumn{1}{l|}{\textbf{S{\given}A,D}} & 0.799 & 0.747 & 0.829 & 0.705 &  & 0.228 &	0.226 &	0.474 &	0.222 \\
@@ -569,12 +571,12 @@ First, the graph structure and highlighting in Fig. \ref{fig:alert_depend_1} was
 			\multicolumn{1}{l|}{\textbf{S{\given}D,T}} & \textbf{0.107} & \textbf{0.025} & \textbf{0.101} & \textbf{0.024} &  & \textbf{0.107} & \textbf{0.025} & \textbf{0.101} & \textbf{0.024} \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A,D}} & \textbf{0.316} & \textbf{0.335} & \textbf{0.650} & \textbf{0.246} &  & \textbf{0.316} & \textbf{0.335} & \textbf{0.650} & \textbf{0.246} \\
 			\multicolumn{1}{l|}{\textbf{A{\given}S,D}} & 0.069 & 0.206 & 0.056 & 0.245 &  & 0.018 &	0.003 &	0.007 &	0.055 \\
-			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & 0.117 & 0.013 & 0.130 &  & 0.112 &	0.117 &	0.013 &	0.131 \\
+			\multicolumn{1}{l|}{\textbf{A{\given}S,T}} & 0.131 & \textbf{0.117} & \textbf{0.013} & \textbf{0.130} &  & 0.112 &	\textbf{0.117} &	\textbf{0.013} &	\textbf{0.131} \\
 			\multicolumn{1}{l|}{\textbf{A{\given}D,T}} & \textbf{0.038} & \textbf{0.018} & \textbf{0.001} & \textbf{0.004} &  & \textbf{0.038} & \textbf{0.018} & \textbf{0.001} & \textbf{0.004} \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A,S}} & 0.005 & 0.243 & 0.005 & 0.012 &  & 0.054 &	0.000 &	0.000 &	0.000 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}S,D}} & 0.393 & 0.340 & 0.587 & 0.348 &  & 0.176 &	0.144 &	0.334 &	0.170 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A,T}} & 0.004 & 0.238 & 0.003 & 0.007 &  & 0.044 &	0.006 &	0.000 &	0.000 \\
-			\multicolumn{1}{l|}{\textbf{S{\given}A,T}} & 0.211 & 0.178 & 0.100 & 0.228 &  & 0.055 &	0.012 &	0.100 &	0.019 \\
+			\multicolumn{1}{l|}{\textbf{S{\given}A,T}} & 0.211 & 0.178 & \textbf{0.100} & 0.228 &  & 0.055 &	0.012 &	\textbf{0.100} &	0.019 \\
 			\multicolumn{1}{l|}{\textbf{T{\given}A,S}} & 0.365 & 0.312 & 0.561 & 0.302 &  & 0.170 &	0.144 &	0.328 &	0.089 \\ \hline
 			\multicolumn{1}{l|}{\textbf{A{\given}S,D,T}} & 0.041 & 0.172 & 0.028 & 0.195 &  & 0.005	& 0.003	& 0.000	& 0.001 \\
 			\multicolumn{1}{l|}{\textbf{D{\given}A,S,T}} & 0.002 & 0.232 & 0.002 & 0.004 &  & 0.044	& 0.000	& 0.000	& 0.000 \\
@@ -621,11 +623,9 @@ Despite identical conditional entropy values existing between the ground truth a
 
 The figure shows the conditional probability table for A{\given}D,T. All of the tables are formatted such that the input feature combination is given in the first column, the probability of that input occurring is given by the second column, the third column indicates the number of times that input occurred, and the remaining columns indicate the output values and their probability of occurring. This allows for identification of the influence each input combination would have on the conditional probability calculation. Cells that are highlighted red have no probability of being output given the input conditioning values. Cells that are highlighted blue indicate cells that are deterministically output given specific input conditioning values. 
 
-Note that the ground truth distribution exhibits deterministic behavior for many of the input feature combinations. Capturing these cases of deterministic behavior is especially important for inputs which occur frequently. For example, the successfully learning the dependency between ms-wbt-server and time bin 1 predicting the value of the correct alert signature is important to model accuracy. The WGAN-GP generated distribution exploits this and generates many more samples than the ground truth contains, while the WGAN-GPMI distribution performs far closer to the real probability of occurrence. Additionally, several input combinations which the models fail to generate are highlighted in the table. Note that the input combination of kerberos+6 only occurs once in the ground truth, making it nearly impossible for either model to learn to recreate this value. But other cases such as mysql+3 occur 277 times in the ground truth distribution but only twice in the WGAN-GP Model. WGAN-GPMI does a far better job of recreating this input, as it occurs 194 times in the generated distribution.
+Note that the ground truth distribution exhibits deterministic behavior for many of the input feature combinations. Capturing these cases of deterministic behavior is especially important for inputs which occur frequently. For example, successfully learning the dependency between ms-wbt-server and time bin 1 predicting the value of the correct alert signature is important to model accuracy. The WGAN-GP generated distribution exploits this and generates many more samples than the ground truth contains, while the WGAN-GPMI distribution performs far closer to the real probability of occurrence. Additionally, several input combinations which the models fail to generate are highlighted in the table. Note that the input combination of kerberos+6 only occurs once in the ground truth, making it nearly impossible for either model to learn to recreate this value. But other cases such as mysql+3 occur 277 times in the ground truth distribution but only twice in the WGAN-GP Model. WGAN-GPMI does a far better job of recreating this input, as it occurs 194 times in the generated distribution.
 
-Another interesting observation from these probability tables is that sometimes only a subset of the input conditioning values affects the output value. For example, if the given Destination Service value is \emph{ms-wbt-server} then the output Alert Signature is \emph{ET DOS Microsoft RDP Syn.} for all \emph{Time Bin} values except 5.
-
-Finally, several input combination instances that occur in the ground truth distribution never occur in the WGAN-GP generated distribution. These include (INPUTS). This is referred to as mode dropping and covered more in depth in Section \ref{sec:output}.
+Another interesting observation from these probability tables is that sometimes only a subset of the input conditioning values affects the output value. For example, if the given Destination Service value is \emph{ms-wbt-server} then the output Alert Signature is \emph{ET DOS Microsoft RDP Syn.} for \emph{all} Time Bin values except 5.
 
 \section{Output Modes Captured}
 \label{sec:output}
@@ -633,6 +633,39 @@ Finally, to assess output modes captured by each model, two values were collecte
 
 Table \ref{tab:output_modes} shows the number of output modes missed by the generative model. The bottom two rows identify the number of unique output modes consisting of all 4 features for each target IP and the percentage of modes dropped.  Note that this table shows the direct benefit of mutual information maximization, as the number of output modes missed by the model decreases across the board for the WGAN-GPMI model. Some of the target IP addresses recover more modes than others when moving to the WGAN-GPMI model; 10.0.0.100, as well as 10.0.0.22,  halve the number of output modes dropped. On the other hand, 10.0.0.27 and 10.0.99.143 only see a minor improvement when adding in the mutual information constraint.
 
+One potential explanation for this would be that the missing output modes occur with such low probability that even with the mutual information constraint on the generator the model does not receive sufficient gradient feedback to learn to output these values. Methods to recreate rare samples remains an ongoing challenge that is incredibly important to the field of Cyber Security. It is possible that critical actions, such as data exfiltration may only generate a small number of alerts rarely over the course of an attack. Being able to model such behaviors would be extremely beneficial to proactive Cyber Defense, where critical vulnerabilities are identified and patched. Additionally a means to identify the type of behavior associated with the additional output modes captured would provide contextual information to what type of network behaviors are most recoverable from data driven models such as GANs. 
+
+%\begin{table}[!htbp]
+%	\centering
+%	\caption{Output Modes Dropped}
+%		\begin{tabular}{ccc}
+%			\multicolumn{1}{c|}{\textbf{M}} & \multicolumn{1}{l|}{\textbf{WGAN-GP}} & \multicolumn{1}{l}{\textbf{WGAN-GPMI}} \\ \hline
+%			\multicolumn{1}{c|}{\multirow{4}{*}{\textbf{1}}} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c}{1} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c}{2} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c}{0} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{10} & \multicolumn{1}{c}{1} \\ \hline
+%			
+%			\multicolumn{1}{c|}{\multirow{6}{*}{\textbf{2}}} & \multicolumn{1}{c|}{17} & \multicolumn{1}{c}{2} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c}{2}  \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{11} & \multicolumn{1}{c}{4} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{13} & \multicolumn{1}{c}{1} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c}{6} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{10} & \multicolumn{1}{c}{3} \\ \hline
+%			
+%			
+%			\multicolumn{1}{c|}{\multirow{4}{*}{\textbf{3}}} & \multicolumn{1}{c|}{14} & \multicolumn{1}{c}{9} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{20} & \multicolumn{1}{c}{5} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{18} & \multicolumn{1}{c}{5} \\
+%			\multicolumn{1}{c|}{} & \multicolumn{1}{c|}{16} & \multicolumn{1}{c}{6} \\ \hline
+%			
+%			\multicolumn{1}{c|}{\textbf{4}} & \multicolumn{1}{c|}{21} & \multicolumn{1}{c}{10} \\ \hline
+%			\hline
+%			
+%			\multicolumn{1}{l|}{\textbf{\# Alerts}} & \multicolumn{1}{c|}{3388} & \multicolumn{1}{l}{} \\
+%			\multicolumn{1}{l|}{\textbf{\# Unique Modes}} & \multicolumn{1}{c|}{32} & \multicolumn{1}{l}{} \\
+%			\multicolumn{1}{l|}{\textbf{\% Modes Dropped}} & \multicolumn{1}{c|}{0.6563} & \multicolumn{1}{c}{0.3125} 
+%		\end{tabular}
+%\end{table}
 
 \begin{table}[!htbp]
 	\centering
@@ -673,8 +706,6 @@ Table \ref{tab:output_modes} shows the number of output modes missed by the gene
 
 Table \ref{tab:random_outputs} shows the number of noisy outputs by the generative model that did not occur in the ground truth. The bottom two rows of this table shows the number of unique modes and the ratio of noisy 4-tuple samples over the number of true combinations.  For target IP 10.0.99.143, the target IP tested with the lowest number of alerts, the WGAN-GPMI model appears to create less noisy outputs. Additionally 10.0.0.27 also sees a significant drop in the number of noisy outputs generated when using the WGAN-GPMI model. Interestingly, these are also the two IP addresses which did not experience a large decrease in the number of output modes dropped.
 
-One potential explanation for this would be that the missing output modes occur with such low probability that even with the mutual information constraint on the generator the model does not receive sufficient gradient feedback to learn to output these values. Samples like this were previously identified in Section \ref{sec:gpmi_dep}; methods to recreate rare samples like this remains an ongoing challenge that is incredibly important to the field of Cyber Security. It is possible that critical actions, such as data exfiltration may only generate a small number of alerts rarely over the course of an attack. Being able to model such behaviors would be extremely beneficial to proactive Cyber Defense, where critical vulnerabilities are identified and patched.
-
 \begin{table}[!htbp]
 	\centering
 	\caption{Noisy Generator Output Counts}
@@ -713,6 +744,8 @@ One potential explanation for this would be that the missing output modes occur 
 	\end{adjustbox}
 \end{table}
 
+Interestingly, these output modes aren't inherently wrong since the individual feature value do exist in the ground truth dataset. However, there should be no gradient feedback to encourage the generation of these combinations of feature values since they don't occur in the ground truth data.
+
 \section{Generality of Models}
 \label{sec:cptc18}
 
@@ -747,4 +780,4 @@ One of the most powerful characteristics of Machine Learning models is their abi
 \end{table}
 
 
-After training each model the Histogram Intersection was computed for each generated distribution, as shown in Table \ref{tab:inter18}. Given the results, both models perform well at generating alerts which emulate the CPTC'18 data. Note that the prior observations regarding mutual information maximization increasing histogram intersection also hold true when applied to a new dataset. Additionally, the methods presented for identifying feature dependencies and output mode dropping are fully applicable to this new dataset.
+After training each model the Histogram Intersection was computed for each generated distribution, as shown in Table \ref{tab:inter18}. Given the results, both models perform well at generating alerts which emulate the CPTC'18 data. Note that the prior observations regarding mutual information maximization increasing Histogram Intersection also hold true when applied to a new dataset. Additionally, the methods presented for identifying feature dependencies and output mode dropping are fully applicable to this new dataset.
