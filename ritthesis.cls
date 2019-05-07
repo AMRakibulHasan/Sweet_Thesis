@@ -409,7 +409,7 @@
 		
 		\vfill
 		
-		A Thesis/Project Submitted\\
+		A Thesis Submitted\\
 		in Partial Fulfillment\\
 		of the Requirements for the Degree of\\
 		\@degreename\\
